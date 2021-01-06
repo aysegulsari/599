@@ -1,0 +1,38 @@
+{% block report_content %}
+<div class="container">
+    <h4>Create A New Report</h4>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Name</span>
+                </div>
+                <input type="text" maxlength="50" class="form-control" aria-label="Default"
+                       aria-describedby="inputGroup-sizing-default" id="name" name="name" required>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default2">Description</span>
+                </div>
+                <input type="text" maxlength="50" class="form-control" aria-label="Default"
+                       aria-describedby="inputGroup-sizing-default" id="description" name="description" required>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default3">Keywords</span>
+                </div>
+                <input type="text" maxlength="50" class="form-control" aria-label="Default"
+                       aria-describedby="inputGroup-sizing-default" id="keyword" name="keyword" required>
+            </div>
+            <div class="form-group row float-right">
+                <button id="search" class="btn btn-primary btn-large">Collect Tweets</button>
+                <button type="submit" class="btn btn-primary btn-large" style="display:none;">Save</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+</div>
+{% endblock %}

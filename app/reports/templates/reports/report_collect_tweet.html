@@ -1,0 +1,127 @@
+{% extends "reports/report_base.html" %}
+{% block report_content %}
+
+<form>
+
+    <h6>Enter the keyword to collect yor tweets</h6>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default3">Keywords</span>
+        </div>
+        <input type="text" maxlength="50" class="form-control" aria-label="Default"
+               aria-describedby="inputGroup-sizing-default" id="keyword" name="keyword" required>
+    </div>
+    <div class="input-group mb-3">
+        <fieldset>
+                <div id="dateRange"
+                     style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+                    <i class="fa fa-calendar"></i>&nbsp;
+                    <span></span> <i class="fa fa-caret-down"></i>
+                </div>
+        </fieldset>
+    </div>
+
+
+    <div>
+        <button class="btn-warning" id='button' type="button"><span class="fa fa-plus"></span>Collect Sample Tweets
+        </button>
+        <button class="btn-warning" id='button2' type="button"><span class="fa fa-plus"></span>Create Report</button>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class="input-group mb-3">
+        <table id="datatable" class="display">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>created_at</th>
+                <th>text</th>
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+                <th>id</th>
+                <th>created_at</th>
+                <th>text</th>
+            </tr>
+            </tfoot>
+        </table>
+
+    </div>
+</form>
+
+<script>
+
+
+    let startDate = moment().subtract(29, 'days');
+    let endDate = moment();
+
+    function cb(start, end) {
+        $('#dateRange span').html(start.format('YYYY-MM-DD') + ' / ' + end.format('YYYY-MM-DD'));
+    }
+
+    $('#dateRange').daterangepicker({
+
+        startDate: startDate,
+        endDate: endDate,
+        ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    }, cb);
+
+    cb(startDate, endDate);
+
+    window.onload = function (e) {
+        document.getElementById("datatable").style.visibility = 'hidden'
+        document.getElementById("button2").style.visibility = 'hidden'
+    }
+
+    $("#button").click(function () {
+        let keyword = document.getElementById("keyword").value;
+        let dateRange = document.querySelector("#dateRange > span").innerText.split('/')
+        startDate = dateRange[0].trim()
+        endDate = dateRange[1].trim()
+        if (keyword.length == 0) {
+            alert('Please provide at least 1 keyword!' + startDate + "," + endDate)
+        } else {
+            let tweets = $.ajax({
+                type: 'POST',
+                async: false,
+                url: '{% url "reports:collect_tweets" %}',
+                dataType: 'json',
+                data: {
+                    'keyword': keyword,
+                    'start': startDate,
+                    'end': endDate
+                }
+
+            }).responseJSON;
+
+            document.getElementById("datatable").style.visibility = 'visible'
+            document.getElementById("button2").style.visibility = 'visible'
+
+            $('#datatable').DataTable({
+                destroy: true,
+                "processing": true,
+                data: tweets['data']
+            });
+        }
+    });
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+

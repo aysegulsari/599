@@ -1,0 +1,11 @@
+Django
+psycopg2-binary
+django-bootstrap4
+python-twitter
+django-braces
+pandas
+matplotlib
+wordcloud
+tweepy
+nltk
+python-twitter
