@@ -1,8 +1,8 @@
 {% extends "reports/report_base.html" %}
-{% block report_content %}
+
 
 <form>
-
+    {% block report_content %}
     <h6>Enter the keyword to collect yor tweets</h6>
     <div class="input-group mb-3">
         <div class="input-group-prepend">
@@ -12,15 +12,18 @@
                aria-describedby="inputGroup-sizing-default" id="keyword" name="keyword" required>
     </div>
     <div class="input-group mb-3">
-        <fieldset>
-                <div id="dateRange"
-                     style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
-                    <i class="fa fa-calendar"></i>&nbsp;
-                    <span></span> <i class="fa fa-caret-down"></i>
-                </div>
-        </fieldset>
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default4">Tweet count</span>
+        </div>
+        <input type="text" maxlength="50" class="form-control" aria-label="Default"
+               aria-describedby="inputGroup-sizing-default" id="tweet_count" name="tweet_count" required>
     </div>
-
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default5">Time interval</span>
+        </div>
+        <input type="text" name="daterange" value="12/01/2019 - 01/06/2020" required>
+    </div>
 
     <div>
         <button class="btn-warning" id='button' type="button"><span class="fa fa-plus"></span>Collect Sample Tweets
@@ -30,63 +33,48 @@
     <br>
     <br>
     <br>
+    <br>
     <div class="input-group mb-3">
-        <table id="datatable" class="display">
+        <table id="datatable" class="display" style="width:100%">
             <thead>
             <tr>
-                <th>id</th>
-                <th>created_at</th>
-                <th>text</th>
+                <th>Tweet ID</th>
+                <th>Creation Date</th>
+                <th>Tweet Text</th>
             </tr>
             </thead>
             <tfoot>
             <tr>
-                <th>id</th>
-                <th>created_at</th>
-                <th>text</th>
+                <th>Tweet ID</th>
+                <th>Creation Date</th>
+                <th>Tweet Text</th>
             </tr>
             </tfoot>
         </table>
-
     </div>
 </form>
 
 <script>
-
-
-    let startDate = moment().subtract(29, 'days');
-    let endDate = moment();
-
-    function cb(start, end) {
-        $('#dateRange span').html(start.format('YYYY-MM-DD') + ' / ' + end.format('YYYY-MM-DD'));
-    }
-
-    $('#dateRange').daterangepicker({
-
-        startDate: startDate,
-        endDate: endDate,
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        }
-    }, cb);
-
-    cb(startDate, endDate);
-
     window.onload = function (e) {
         document.getElementById("datatable").style.visibility = 'hidden'
         document.getElementById("button2").style.visibility = 'hidden'
     }
 
+    let startDate;
+    let endDate;
+    $(function () {
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'left'
+        }, function (start, end, label) {
+            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            startDate = start.format('YYYY-MM-DD');
+            endDate = end.format('YYYY-MM-DD');
+        });
+    });
+
     $("#button").click(function () {
         let keyword = document.getElementById("keyword").value;
-        let dateRange = document.querySelector("#dateRange > span").innerText.split('/')
-        startDate = dateRange[0].trim()
-        endDate = dateRange[1].trim()
+        let count = document.getElementById("tweet_count").value;
         if (keyword.length == 0) {
             alert('Please provide at least 1 keyword!' + startDate + "," + endDate)
         } else {
@@ -98,9 +86,9 @@
                 data: {
                     'keyword': keyword,
                     'start': startDate,
-                    'end': endDate
+                    'end': endDate,
+                    'count': count,
                 }
-
             }).responseJSON;
 
             document.getElementById("datatable").style.visibility = 'visible'
