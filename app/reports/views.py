@@ -1,25 +1,34 @@
-from django.contrib import messages
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
-    PermissionRequiredMixin
 )
 
 from django.shortcuts import render
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
-
+import os
 from . import models
 from django.http import JsonResponse
 import twitter
+from dotenv import load_dotenv
 
-CONSUMER_KEY = "sJJJUWkvfvpZYcbY0buMRYup7"
-CONSUMER_SECRET = "iDQB0WGuOsY7ITZCYwZEk2o7a2kxiSKn6kFg3NZFO4ca11LoYA"
-ACCESS_TOKEN = "184983841-Cg8ps0f6pp98lsQRwennlwhilmHpMFQp2TUuciH1"
-ACCESS_TOKEN_SECRET = "an8rfv4cyuSLCCaUqfU3zy8RRS55hmGHUvim1FGDJkQlk"
+load_dotenv()
+
+CONSUMER_KEY = os.getenv("CONSUMER_KEY")
+CONSUMER_SECRET = os.getenv("CONSUMER_SECRET")
+ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
+ACCESS_TOKEN_SECRET = os.getenv("ACCESS_TOKEN_SECRET")
 
 
 class CreateReport(LoginRequiredMixin, generic.CreateView):
     fields = ("name", "description")
+    model = models.Report
+
+
+class SingleReport(generic.DetailView):
+    model = models.Report
+
+
+class ListReports(generic.ListView):
     model = models.Report
 
 
@@ -40,14 +49,6 @@ def create_report(request):
                        })
     else:
         return render(request, 'reports/report_form.html')
-
-
-class SingleReport(generic.DetailView):
-    model = models.Report
-
-
-class ListReports(generic.ListView):
-    model = models.Report
 
 
 def report_collect_tweet(request):

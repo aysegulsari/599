@@ -9,3 +9,4 @@ wordcloud
 tweepy
 nltk
 python-twitter
+python-dotenv
