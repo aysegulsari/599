@@ -13,16 +13,16 @@
     </div>
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-default4">Tweet count</span>
+            <span class="input-group-text" id="inputGroup-sizing-default4">Tweet Count</span>
         </div>
         <input type="text" maxlength="50" class="form-control" aria-label="Default"
-               aria-describedby="inputGroup-sizing-default" id="tweet_count" name="tweet_count" required>
+               aria-describedby="inputGroup-sizing-default" id="count" name="count" required>
     </div>
     <div class="input-group mb-3">
         <div class="input-group-prepend">
             <span class="input-group-text" id="inputGroup-sizing-default5">Time interval</span>
         </div>
-        <input type="text" name="daterange" value="12/01/2019 - 01/06/2020" required>
+        <input type="text" name="daterange" value="12/01/2020 - 01/06/2021" required>
     </div>
 
     <div>
@@ -32,6 +32,11 @@
     </div>
     <br>
     <br>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <p id="note"> Please wait until tweets are loaded...</p>
+        </div>
+    </div>
     <br>
     <br>
     <div class="input-group mb-3">
@@ -58,10 +63,11 @@
     window.onload = function (e) {
         document.getElementById("datatable").style.visibility = 'hidden'
         document.getElementById("button2").style.visibility = 'hidden'
+        document.getElementById("note").style.visibility = 'hidden'
     }
 
-    let startDate;
-    let endDate;
+    let startDate='2020-12-01';
+    let endDate='2021-01-06';
     $(function () {
         $('input[name="daterange"]').daterangepicker({
             opens: 'left'
@@ -74,10 +80,12 @@
 
     $("#button").click(function () {
         let keyword = document.getElementById("keyword").value;
-        let count = document.getElementById("tweet_count").value;
+        let count = document.getElementById("count").value;
         if (keyword.length == 0) {
             alert('Please provide at least 1 keyword!' + startDate + "," + endDate)
         } else {
+            document.getElementById("note").style.visibility = 'visible'
+            document.getElementById("note").innerHTML = "Tweets are loaded!"
             let tweets = $.ajax({
                 type: 'POST',
                 async: false,
@@ -85,11 +93,13 @@
                 dataType: 'json',
                 data: {
                     'keyword': keyword,
-                    'start': startDate,
-                    'end': endDate,
                     'count': count,
+                    'start': startDate,
+                    'end': endDate
                 }
             }).responseJSON;
+            console.log(tweets)
+            document.getElementById("note").innerHTML = " Please wait until tweets are loaded..."
 
             document.getElementById("datatable").style.visibility = 'visible'
             document.getElementById("button2").style.visibility = 'visible'
