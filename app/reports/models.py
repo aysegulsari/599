@@ -16,11 +16,11 @@ register = template.Library()
 
 
 class Report(models.Model):
-    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(allow_unicode=True, unique=True)
     description = models.TextField(blank=False, default='')
-    keyword=models.TextField(blank=False,default='')
+    keyword = models.TextField(blank=False, default='')
 
     def __str__(self):
         return self.name
@@ -34,3 +34,10 @@ class Report(models.Model):
 
     class Meta:
         ordering = ["name"]
+
+
+class Tweet(models.Model):
+    report = models.ForeignKey(Report, on_delete=models.CASCADE)
+    tweet_id = models.TextField(blank=False, default='')
+    creation_date = models.TextField(blank=False, default='')
+    tweet_text = models.CharField(max_length=280, unique=True)
