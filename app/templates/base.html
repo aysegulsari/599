@@ -30,9 +30,6 @@
         <div class="navbar-nav ml-auto">
             {% if user.is_authenticated %}
             <a class="nav-item nav-link" href="{% url 'reports:all' %}" class="btn btn-simple">Reports</a>
-            <a class="nav-item nav-link" href="{% url 'reports:report_collect_tweet' %}" class="btn btn-simple">Create
-                New
-                Report</a>
             <a class="nav-item nav-link" href="{% url 'accounts:logout' %}" class="btn btn-simple">Log out</a>
             {% else %}
             <a class="nav-item nav-link" href="{% url 'accounts:login' %}" class="btn btn-simple">Log in</a>
