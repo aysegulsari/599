@@ -78,7 +78,7 @@ def collect_tweets(request):
     '''
     i = 0
     data = []
-    for tweet in tweepy.Cursor(api.search, q=keyword, count=count, lang='tr', tweet_mode='extended', since=start_date,
+    for tweet in tweepy.Cursor(api.search, q=keyword+' -filter:retweets', count=count, lang='tr', tweet_mode='extended', since=start_date,
                                until=end_date).items():
         data.append(tweet)
         i += 1
