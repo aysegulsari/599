@@ -30,9 +30,9 @@
     </div>
 
     <div>
-        <button class="btn-warning" id='button' type="button"><span class="fa fa-plus"></span>Collect Sample Tweets
+        <button class="btn-warning" id='button' type="button"><span class="fa fa-plus"></span>Collect Tweets
         </button>
-        <button class="btn-warning" id='button2' type="button"><span class="fa fa-plus"></span>Create Report</button>
+        <button class="btn-warning" id='button2' type="button"><span class="fa fa-plus"></span>Save Tweet Collection</button>
     </div>
     <br>
     <br>
@@ -89,7 +89,7 @@
             alert('Please provide at least 1 keyword!' + startDate + "," + endDate)
         } else {
             document.getElementById("note").style.visibility = 'visible'
-            document.getElementById("note").innerHTML = "Tweets are loaded!"
+            document.getElementById("note").innerHTML = " Please wait until tweets are loaded..."
             let tweets = $.ajax({
                 type: 'POST',
                 async: false,
@@ -103,7 +103,7 @@
                 }
             }).responseJSON;
             console.log(tweets)
-            document.getElementById("note").innerHTML = " Please wait until tweets are loaded..."
+            document.getElementById("note").innerHTML = "Tweets are loaded!"
 
             document.getElementById("datatable").style.visibility = 'visible'
             document.getElementById("button2").style.visibility = 'visible'
