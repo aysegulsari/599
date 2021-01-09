@@ -8,9 +8,13 @@
         <div class="input-group-prepend">
             <span class="input-group-text" id="inputGroup-sizing-default3">Keywords</span>
         </div>
-        <input type="text" maxlength="50" class="form-control" aria-label="Default"
-               aria-describedby="inputGroup-sizing-default" id="keyword" name="keyword" required>
+        <div class="form-control tags" id="tags">
+            <input type="text" class="labelinput">
+            <input type="hidden" name="result" id="keyword" name="keyword" required>
+        </div>
+
     </div>
+
     <div class="input-group mb-3">
         <div class="input-group-prepend">
             <span class="input-group-text" id="inputGroup-sizing-default4">Tweet Count</span>
@@ -66,8 +70,8 @@
         document.getElementById("note").style.visibility = 'hidden'
     }
 
-    let startDate='2020-12-01';
-    let endDate='2021-01-06';
+    let startDate = '2020-12-01';
+    let endDate = '2021-01-06';
     $(function () {
         $('input[name="daterange"]').daterangepicker({
             opens: 'left'
@@ -110,6 +114,13 @@
                 data: tweets['data']
             });
         }
+    });
+    $(function () {
+        $('#tags').tagInput();
+    });
+    // Bootstrap 4
+    $('#tags').tagInput({
+        labelClass: "badge badge-success"
     });
 </script>
 {% endblock %}
