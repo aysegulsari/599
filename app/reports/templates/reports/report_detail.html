@@ -1,15 +1,129 @@
 {% extends "reports/report_base.html" %}
 
-{% block prereport %}
+{% block report_content %}
 <div class="container">
     <h1>{{report.name}}</h1>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default2">Report Name</span>
+        </div>
+        <input type="text" maxlength="50" class="form-control" aria-label="Default"
+               aria-describedby="inputGroup-sizing-default" id="name" name="name" disabled value="{{report.name}}">
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default3">Keywords</span>
+        </div>
+        <input type="text" maxlength="50" class="form-control" aria-label="Default"
+               aria-describedby="inputGroup-sizing-default" id="keyword" name="keyword" disabled
+               value="{{report.keyword}}">
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default4">Tweet Count</span>
+        </div>
+        <input type="text" maxlength="50" class="form-control" aria-label="Default"
+               aria-describedby="inputGroup-sizing-default" id="count" name="count" disabled
+               value="{{report.tweet_count}}">
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default5">Time interval</span>
+        </div>
+        <input type="text" maxlength="50" class="form-control" aria-label="Default"
+               aria-describedby="inputGroup-sizing-default" value="{{report.time_interval}}" disabled>
+    </div>
+
+    <div>
+        <button class="btn-warning" id='button' type="button"><span class="fa fa-plus"></span>Show/Hide Tweets
+        </button>
+        <button class="btn-warning" id='button2' type="button"><span class="fa fa-plus"></span>Analyze Tweets
+        </button>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="input-group mb-3">
+        <table id="datatable" class="display" style="width:100%">
+            <thead>
+            <tr>
+                <th>Tweet ID</th>
+                <th>Creation Date</th>
+                <th>Tweet Text</th>
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+                <th>Tweet ID</th>
+                <th>Creation Date</th>
+                <th>Tweet Text</th>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
 </div>
 </div>
-{% endblock %}
 
-{% block report_content %}
+<script>
+    window.onload = function (e) {
+        document.getElementById("datatable").style.visibility = 'hidden'
+        //document.getElementById("button2").style.visibility = 'hidden'
 
-<div class="col-md-8">
+        /*
+         $('#datatable').DataTable({
+                destroy: true,
+                "processing": true,
+                data: tweets['data']
+         });
+         */
+    }
 
-</div>
+    $("#button").click(function () {
+
+        if (document.getElementById("datatable").style.visibility == 'hidden')
+
+            document.getElementById("datatable").style.visibility = 'visible'
+        else
+            document.getElementById("datatable").style.visibility = 'hidden'
+
+
+    });
+
+    $("#button2").click(function () {
+        /*
+        let name = document.getElementById("name").value;
+        let result = $.ajax({
+            type: 'POST',
+            async: false,
+            url: '{% url "reports:save_tweets" %}',
+            dataType: 'json',
+            data: {
+                'keyword': keyword,
+                'name': name,
+                'count': tweets.data.length,
+                'start': startDate,
+                'end': endDate,
+                'tweets': tweets
+            }
+        });
+
+        document.getElementById("note").innerHTML = "Report is saved!"
+
+        /*
+
+           document.getElementById("datatable").style.visibility = 'visible'
+           document.getElementById("button2").style.visibility = 'visible'
+
+           $('#datatable').DataTable({
+               destroy: true,
+               "processing": true,
+               data: tweets['data']
+           });
+       }*/
+    });
+
+</script>
 {% endblock %}

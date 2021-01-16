@@ -20,6 +20,9 @@ CONSUMER_KEY = os.getenv("CONSUMER_KEY")
 CONSUMER_SECRET = os.getenv("CONSUMER_SECRET")
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 ACCESS_TOKEN_SECRET = os.getenv("ACCESS_TOKEN_SECRET")
+auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+api = tweepy.API(auth)
 
 
 class CreateReport(LoginRequiredMixin, generic.CreateView):
@@ -62,14 +65,11 @@ def collect_tweets(request):
     keyword = request.POST.get('keyword')
     count = request.POST.get('count')
     if not count:
-        count="100"
+        count = "100"
     start_date = request.POST.get('start')
     end_date = request.POST.get('end')
-    print(count)
     limit = int(count)
-    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-    auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-    api = tweepy.API(auth)
+
     '''
     api = twitter.Api(consumer_key=CONSUMER_KEY,consumer_secret=CONSUMER_SECRET,
             access_token_key=ACCESS_TOKEN, access_token_secret=ACCESS_TOKEN_SECRET)
@@ -78,7 +78,8 @@ def collect_tweets(request):
     '''
     i = 0
     data = []
-    for tweet in tweepy.Cursor(api.search, q=keyword+' -filter:retweets', count=count, lang='tr', tweet_mode='extended', since=start_date,
+    for tweet in tweepy.Cursor(api.search, q=keyword + ' -filter:retweets', count=count, lang='tr',
+                               tweet_mode='extended', since=start_date,
                                until=end_date).items():
         data.append(tweet)
         i += 1
@@ -87,10 +88,48 @@ def collect_tweets(request):
         else:
             pass
 
-    tweets_text = [[1, str(tw.created_at), tw.full_text] for tw in data]
+    tweets_text = [[tw.id, str(tw.created_at), tw.full_text] for tw in data]
     tweets_text = {'data': tweets_text}
     print(tweets_text)
     return JsonResponse(tweets_text, safe=False)
+
+
+@csrf_exempt
+def save_tweets(request):
+    # save report
+    print("ok")
+    user = request.user
+    name = request.POST.get('name')
+    time_interval = request.POST.get('start') + " / " + request.POST.get('end')
+    keyword = request.POST.get('keyword')
+    count = request.POST.get('count')
+
+    reports = myModels.Report.objects.filter(name=name, user=user)
+    message = "could not saved"
+    if len(reports) == 0:
+        myModels.Report.objects.create(name=name, time_interval=time_interval, keyword=keyword, user=user,
+                                       tweet_count=count)
+        reports = myModels.Report.objects.filter(name=name, user=user)
+        if len(reports) != 0:
+            message = "report is saved"
+
+    result = {'data': message}
+    return JsonResponse(result, safe=False)
+
+
+'''
+    report=myModels.Report.objects.filter(user=request.user,name=name)
+
+    tweets = request.POST.get('tweets')
+
+    for t in tweets['data']:
+        print("id",t[0])
+        print("date",t[1])
+        print("text",t[2])
+
+
+    return "JsonResponse(tweets, safe=False)"
+'''
 
 
 def report_collect_tweet(request):

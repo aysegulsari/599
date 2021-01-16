@@ -3,7 +3,15 @@
 
 <form>
     {% block report_content %}
-    <h6>Enter the keyword to collect yor tweets</h6>
+    <h6>Create Report</h6>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default2">Report Name</span>
+        </div>
+        <input type="text" maxlength="50" class="form-control" aria-label="Default"
+               aria-describedby="inputGroup-sizing-default" id="name" name="name" required>
+    </div>
+
     <div class="input-group mb-3">
         <div class="input-group-prepend">
             <span class="input-group-text" id="inputGroup-sizing-default3">Keywords</span>
@@ -12,7 +20,6 @@
             <input type="text" class="labelinput">
             <input type="hidden" name="result" id="keyword" name="keyword" required>
         </div>
-
     </div>
 
     <div class="input-group mb-3">
@@ -26,13 +33,14 @@
         <div class="input-group-prepend">
             <span class="input-group-text" id="inputGroup-sizing-default5">Time interval</span>
         </div>
-        <input type="text" name="daterange" value="12/01/2020 - 01/06/2021" required>
+        <input type="text" name="daterange" value="01/12/2021 - 01/16/2021" required>
     </div>
 
     <div>
         <button class="btn-warning" id='button' type="button"><span class="fa fa-plus"></span>Collect Tweets
         </button>
-        <button class="btn-warning" id='button2' type="button"><span class="fa fa-plus"></span>Save Tweet Collection</button>
+        <button class="btn-warning" id='button2' type="button"><span class="fa fa-plus"></span>Save Report
+        </button>
     </div>
     <br>
     <br>
@@ -70,8 +78,11 @@
         document.getElementById("note").style.visibility = 'hidden'
     }
 
-    let startDate = '2020-12-01';
-    let endDate = '2021-01-06';
+    let startDate = '2021-01-12';
+    let endDate = '2021-01-16';
+    let tweets = [];
+    let keyword = '';
+    let count = '';
     $(function () {
         $('input[name="daterange"]').daterangepicker({
             opens: 'left'
@@ -83,14 +94,14 @@
     });
 
     $("#button").click(function () {
-        let keyword = document.getElementById("keyword").value;
-        let count = document.getElementById("count").value;
-        if (keyword.length == 0) {
-            alert('Please provide at least 1 keyword!' + startDate + "," + endDate)
+        keyword = document.getElementById("keyword").value;
+        count = document.getElementById("count").value;
+        if (keyword.length == 0 || count.length == 0) {
+            alert('Please provide at least 1 keyword and tweet count!')
         } else {
             document.getElementById("note").style.visibility = 'visible'
             document.getElementById("note").innerHTML = " Please wait until tweets are loaded..."
-            let tweets = $.ajax({
+            tweets = $.ajax({
                 type: 'POST',
                 async: false,
                 url: '{% url "reports:collect_tweets" %}',
@@ -115,6 +126,42 @@
             });
         }
     });
+
+    $("#button2").click(function () {
+        let name = document.getElementById("name").value;
+        if (name.length == 0) {
+            alert('Please enter report name!')
+        } else {
+            let result = $.ajax({
+                type: 'POST',
+                async: false,
+                url: '{% url "reports:save_tweets" %}',
+                dataType: 'json',
+                data: {
+                    'keyword': keyword,
+                    'name': name,
+                    'count': tweets.data.length,
+                    'start': startDate,
+                    'end': endDate,
+                    'tweets': tweets
+                }
+            }).responseJSON;
+
+            document.getElementById("note").innerHTML = result.data;
+        }
+        /*
+
+           document.getElementById("datatable").style.visibility = 'visible'
+           document.getElementById("button2").style.visibility = 'visible'
+
+           $('#datatable').DataTable({
+               destroy: true,
+               "processing": true,
+               data: tweets['data']
+           });
+       }*/
+    });
+
     $(function () {
         $('#tags').tagInput();
     });
