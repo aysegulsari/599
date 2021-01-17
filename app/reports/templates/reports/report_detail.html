@@ -2,14 +2,7 @@
 
 {% block report_content %}
 <div class="container">
-    <h1>{{report.name}}</h1>
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-default2">Report Name</span>
-        </div>
-        <input type="text" maxlength="50" class="form-control" aria-label="Default"
-               aria-describedby="inputGroup-sizing-default" id="name" name="name" disabled value="{{report.name}}">
-    </div>
+    <h2>{{report.name}}</h2>
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
