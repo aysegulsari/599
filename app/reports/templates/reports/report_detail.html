@@ -77,46 +77,11 @@
     $("#button").click(function () {
 
         if (document.getElementById("datatable").style.visibility == 'hidden')
-
             document.getElementById("datatable").style.visibility = 'visible'
         else
             document.getElementById("datatable").style.visibility = 'hidden'
-
-
     });
 
-    $("#button2").click(function () {
-        /*
-        let name = document.getElementById("name").value;
-        let result = $.ajax({
-            type: 'POST',
-            async: false,
-            url: '{% url "reports:save_tweets" %}',
-            dataType: 'json',
-            data: {
-                'keyword': keyword,
-                'name': name,
-                'count': tweets.data.length,
-                'start': startDate,
-                'end': endDate,
-                'tweets': tweets
-            }
-        });
-
-        document.getElementById("note").innerHTML = "Report is saved!"
-
-        /*
-
-           document.getElementById("datatable").style.visibility = 'visible'
-           document.getElementById("button2").style.visibility = 'visible'
-
-           $('#datatable').DataTable({
-               destroy: true,
-               "processing": true,
-               data: tweets['data']
-           });
-       }*/
-    });
 
 </script>
 {% endblock %}
