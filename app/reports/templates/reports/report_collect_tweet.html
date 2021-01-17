@@ -3,7 +3,7 @@
 
 <form>
     {% block report_content %}
-    <h6>Create Report</h6>
+    <h2>Create Report</h2>
     <div class="input-group mb-3">
         <div class="input-group-prepend">
             <span class="input-group-text" id="inputGroup-sizing-default2">Report Name</span>
@@ -39,8 +39,8 @@
     <div>
         <button class="btn-warning" id='button' type="button"><span class="fa fa-plus"></span>Collect Tweets
         </button>
-        <button class="btn-warning" id='button2' type="button"><span class="fa fa-plus"></span>Save Report
-        </button>
+        <!-- <button class="btn-warning" id='button2' type="button"><span class="fa fa-plus"></span>Save Report
+         </button> -->
     </div>
     <br>
     <br>
@@ -58,6 +58,7 @@
                 <th>Tweet ID</th>
                 <th>Creation Date</th>
                 <th>Tweet Text</th>
+                <th>Category</th>
             </tr>
             </thead>
             <tfoot>
@@ -65,6 +66,7 @@
                 <th>Tweet ID</th>
                 <th>Creation Date</th>
                 <th>Tweet Text</th>
+                <th>Category</th>
             </tr>
             </tfoot>
         </table>
@@ -74,7 +76,7 @@
 <script>
     window.onload = function (e) {
         document.getElementById("datatable").style.visibility = 'hidden'
-        document.getElementById("button2").style.visibility = 'hidden'
+        //document.getElementById("button2").style.visibility = 'hidden'
         document.getElementById("note").style.visibility = 'hidden'
     }
 
@@ -94,13 +96,19 @@
     });
 
     $("#button").click(function () {
+        document.getElementById("datatable").style.visibility = 'hidden'
+        //document.getElementById("button2").style.visibility = 'hidden'
+
         keyword = document.getElementById("keyword").value;
-        count = document.getElementById("count").value;
-        if (keyword.length == 0 || count.length == 0) {
-            alert('Please provide at least 1 keyword and tweet count!')
+        count = document.getElementById("count").value
+        let name = document.getElementById("name").value;
+
+        if (keyword.length == 0 || count.length == 0 || name.length == 0) {
+            alert('Please enter report name, keyword and tweet count!')
         } else {
             document.getElementById("note").style.visibility = 'visible'
             document.getElementById("note").innerHTML = " Please wait until tweets are loaded..."
+
             tweets = $.ajax({
                 type: 'POST',
                 async: false,
@@ -108,59 +116,34 @@
                 dataType: 'json',
                 data: {
                     'keyword': keyword,
+                    'name': name,
                     'count': count,
                     'start': startDate,
-                    'end': endDate
+                    'end': endDate,
                 }
             }).responseJSON;
             console.log(tweets)
-            document.getElementById("note").innerHTML = "Tweets are loaded!"
+            if (tweets['data'] == "no tweet") {
+                document.getElementById("note").innerHTML = "No tweet found!Try different keywords"
 
-            document.getElementById("datatable").style.visibility = 'visible'
-            document.getElementById("button2").style.visibility = 'visible'
+            } else if (tweets['data'] == "report name exists") {
+                document.getElementById("note").innerHTML = "Report name exist!Enter a different name"
+            } else if (tweets['data'] == "report could not saved") {
+                document.getElementById("note").innerHTML = "Report could not saved"
+            } else {
 
-            $('#datatable').DataTable({
-                destroy: true,
-                "processing": true,
-                data: tweets['data']
-            });
+                document.getElementById("note").innerHTML = "Tweets are loaded!"
+                document.getElementById("datatable").style.visibility = 'visible'
+                //document.getElementById("button2").style.visibility = 'visible'
+                $('#datatable').DataTable({
+                    destroy: true,
+                    "processing": true,
+                    data: tweets['data']
+                });
+            }
         }
-    });
-
-    $("#button2").click(function () {
-        let name = document.getElementById("name").value;
-        if (name.length == 0) {
-            alert('Please enter report name!')
-        } else {
-            let result = $.ajax({
-                type: 'POST',
-                async: false,
-                url: '{% url "reports:save_tweets" %}',
-                dataType: 'json',
-                data: {
-                    'keyword': keyword,
-                    'name': name,
-                    'count': tweets.data.length,
-                    'start': startDate,
-                    'end': endDate,
-                    'tweets': tweets
-                }
-            }).responseJSON;
-
-            document.getElementById("note").innerHTML = result.data;
-        }
-        /*
-
-           document.getElementById("datatable").style.visibility = 'visible'
-           document.getElementById("button2").style.visibility = 'visible'
-
-           $('#datatable').DataTable({
-               destroy: true,
-               "processing": true,
-               data: tweets['data']
-           });
-       }*/
-    });
+    })
+    ;
 
     $(function () {
         $('#tags').tagInput();
