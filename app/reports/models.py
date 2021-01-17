@@ -18,7 +18,7 @@ class Report(models.Model):
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(allow_unicode=True, unique=True)
     time_interval = models.TextField(blank=False, default='')
-    tweet_count= models.TextField(blank=False, default='')
+    tweet_count = models.TextField(blank=False, default='')
     keyword = models.TextField(blank=False, default='')
 
     def __str__(self):
@@ -37,6 +37,8 @@ class Report(models.Model):
 
 class Tweet(models.Model):
     report = models.ForeignKey(Report, on_delete=models.CASCADE)
-    tweet_id = models.TextField(blank=False, default='')
-    creation_date = models.TextField(blank=False, default='')
-    tweet_text = models.CharField(max_length=280, unique=True)
+    tweet_id = models.CharField(blank=False, max_length=100, default='')
+    creation_date = models.CharField(blank=False, max_length=100, default='')
+    tweet_context=models.CharField(blank=False, max_length=100, default='')
+    tweet_text = models.TextField(blank=False, default='')
+    category = models.CharField(blank=False, max_length=100, default='')
