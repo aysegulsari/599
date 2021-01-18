@@ -2,7 +2,7 @@
 
 {% block report_content %}
 <div class="container">
-    <h2>{{report.name}}</h2>
+    <h2 id=>{{report.name}}</h2>
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
@@ -36,16 +36,18 @@
         </button>
     </div>
     <br>
+    <p id="name">{{report.name}}</p>
     <br>
     <br>
     <br>
-    <div class="input-group mb-3">
+    <div class="input-group mb-3" id="datatable-div">
         <table id="datatable" class="display" style="width:100%">
             <thead>
             <tr>
                 <th>Tweet ID</th>
                 <th>Creation Date</th>
                 <th>Tweet Text</th>
+                <th>Category</th>
             </tr>
             </thead>
             <tfoot>
@@ -53,6 +55,7 @@
                 <th>Tweet ID</th>
                 <th>Creation Date</th>
                 <th>Tweet Text</th>
+                <th>Category</th>
             </tr>
             </tfoot>
         </table>
@@ -63,23 +66,41 @@
 <script>
     window.onload = function (e) {
         document.getElementById("datatable").style.visibility = 'hidden'
+        document.getElementById("datatable-div").style.visibility = 'hidden'
+        document.getElementById("name").style.visibility = 'hidden'
         //document.getElementById("button2").style.visibility = 'hidden'
+    }
 
-        /*
-         $('#datatable').DataTable({
+    tweets = {}
+    name = document.getElementById("name").innerHTML
+    $("#button").click(function () {
+
+        if (tweets.count == undefined) {
+            tweets = $.ajax({
+                type: 'POST',
+                async: false,
+                url: '{% url "reports:get_tweets" %}',
+                dataType: 'json',
+                data: {
+                    'name': name,
+                }
+            }).responseJSON;
+
+            $('#datatable').DataTable({
                 destroy: true,
                 "processing": true,
                 data: tweets['data']
-         });
-         */
-    }
+            });
+        }
 
-    $("#button").click(function () {
-
-        if (document.getElementById("datatable").style.visibility == 'hidden')
+        if (document.getElementById("datatable").style.visibility == 'hidden') {
             document.getElementById("datatable").style.visibility = 'visible'
-        else
+            document.getElementById("datatable-div").style.visibility = 'visible'
+
+        } else {
             document.getElementById("datatable").style.visibility = 'hidden'
+            document.getElementById("datatable-div").style.visibility = 'hidden'
+        }
     });
 
 

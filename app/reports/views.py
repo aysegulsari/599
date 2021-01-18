@@ -66,7 +66,7 @@ def collect_tweets(request):
 
     i = 0
     data = []
-    api=utils.get_api()
+    api = utils.get_api()
     for tweet in tweepy.Cursor(api.search, q=keyword + ' -filter:retweets', count=count, lang='en',
                                tweet_mode='extended', since=start_date,
                                until=end_date).items():
@@ -114,3 +114,19 @@ def collect_tweets(request):
 
 def report_collect_tweet(request):
     return render(request, 'reports/report_collect_tweet.html')
+
+
+@csrf_exempt
+def get_tweets(request):
+    name = request.POST.get('name')
+    reports = myModels.Report.objects.filter(name=name, user=request.user)
+    print("rep ", len(reports))
+    tweets = myModels.Tweet.objects.filter(report=reports[0])
+    print("twe ", tweets.count)
+    tweets_t = [[tw.tweet_id, tw.creation_date, tw.tweet_text, tw.category] for tw in tweets]
+    tweets_t = {'data': tweets_t}
+
+    # print(id_context_dict)
+    # tweets_t = {'data': id_context_dict}
+
+    return JsonResponse(tweets_t, safe=False)
