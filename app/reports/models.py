@@ -42,3 +42,8 @@ class Tweet(models.Model):
     tweet_context=models.CharField(blank=False, max_length=100, default='')
     tweet_text = models.TextField(blank=False, default='')
     category = models.CharField(blank=False, max_length=100, default='')
+    negative= models.CharField(blank=False, max_length=10, default='')
+    positive= models.CharField(blank=False, max_length=10, default='')
+    neutral= models.CharField(blank=False, max_length=10, default='')
+    compound=models.CharField(blank=False, max_length=100, default='')
+    sentiment=models.CharField(blank=False, max_length=10, default='')

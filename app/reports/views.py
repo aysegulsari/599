@@ -8,6 +8,11 @@ from . import models as myModels
 from django.http import JsonResponse
 import tweepy
 from . import utils
+from textblob import TextBlob
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import nltk
+
+nltk.downloader.download('vader_lexicon')
 
 
 class CreateReport(LoginRequiredMixin, generic.CreateView):
@@ -95,15 +100,30 @@ def collect_tweets(request):
     id_context_dict = utils.get_id_context_dict(data)
 
     for t in data:
-        print("id", t.id)
-
         context = id_context_dict[str(t.id)]
-        print('c', context)
+
+        analysis = TextBlob(t.full_text)
+        score = SentimentIntensityAnalyzer().polarity_scores(t.full_text)
+        neg = score['neg']
+        neu = score['neu']
+        pos = score['pos']
+        comp = score['compound']
+        polarity = analysis.sentiment.polarity
+        sentiment = 'neutral'
+
+        if neg > pos:
+            sentiment = 'negative'
+        elif pos > neg:
+            sentiment = 'positive'
+
         myModels.Tweet.objects.create(report=reports[0], tweet_id=t.id, creation_date=t.created_at,
-                                      tweet_text=t.full_text, category=context)
+                                      tweet_text=t.full_text, category=context, neutral=neu, negative=neg, positive=pos,
+                                      compound=comp, sentiment=sentiment)
 
     tweets = myModels.Tweet.objects.filter(report=reports[0])
-    tweets_t = [[tw.tweet_id, tw.creation_date, tw.tweet_text, tw.category] for tw in tweets]
+    tweets_t = [
+        [tw.tweet_id, tw.creation_date, tw.tweet_text, tw.category, tw.sentiment, tw.neutral, tw.negative, tw.positive,
+         tw.compound, tw.sentiment] for tw in tweets]
     tweets_t = {'data': tweets_t}
 
     # print(id_context_dict)
@@ -123,7 +143,9 @@ def get_tweets(request):
     print("rep ", len(reports))
     tweets = myModels.Tweet.objects.filter(report=reports[0])
     print("twe ", tweets.count)
-    tweets_t = [[tw.tweet_id, tw.creation_date, tw.tweet_text, tw.category] for tw in tweets]
+    tweets_t = [
+        [tw.tweet_id, tw.creation_date, tw.tweet_text, tw.category, tw.sentiment, tw.neutral, tw.negative, tw.positive,
+         tw.compound, tw.sentiment] for tw in tweets]
     tweets_t = {'data': tweets_t}
 
     # print(id_context_dict)

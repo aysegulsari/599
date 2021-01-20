@@ -12,3 +12,4 @@ python-twitter
 python-dotenv
 pandas
 tweepy
+textBlob
