@@ -15,8 +15,10 @@
         <div class="input-group-prepend">
             <span class="input-group-text" id="inputGroup-sizing-default3">Keywords</span>
         </div>
-         <input type="text" maxlength="50" class="form-control" aria-label="Default"
-               aria-describedby="inputGroup-sizing-default" id="keyword" name="keyword" required>
+        <div class="form-control tags" id="tags">
+            <input type="text" class="labelinput">
+            <input type="hidden" name="result" id="keyword" name="keyword" required>
+        </div>
     </div>
 
     <div class="input-group mb-3">
@@ -103,6 +105,7 @@
     });
 
     $("#button").click(function () {
+        document.body.style.cursor = "progress";
         document.getElementById("datatable").style.visibility = 'hidden'
         //document.getElementById("button2").style.visibility = 'hidden'
 
@@ -112,7 +115,11 @@
 
         if (keyword.length == 0 || count.length == 0 || name.length == 0) {
             alert('Please enter report name, keyword and tweet count!')
+            document.body.style.cursor = "default";
         } else {
+            alert('Please wait until tweets are loaded!')
+            document.body.style.cursor = "progress";
+            s
             document.getElementById("note").style.visibility = 'visible'
             document.getElementById("note").innerHTML = " Please wait until tweets are loaded..."
 
@@ -129,6 +136,8 @@
                     'end': endDate,
                 }
             }).responseJSON;
+            document.body.style.cursor = "default";
+
             console.log(tweets)
             if (tweets['data'] == "no tweet") {
                 document.getElementById("note").innerHTML = "No tweet found!Try different keywords"
@@ -149,16 +158,16 @@
                 });
             }
         }
+    })
+    ;
+
+
+    $(function () {
+        $('#tags').tagInput();
+    });
+    // Bootstrap 4
+    $('#tags').tagInput({
+        labelClass: "badge badge-success"
     });
 </script>
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
