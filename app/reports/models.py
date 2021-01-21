@@ -20,6 +20,7 @@ class Report(models.Model):
     time_interval = models.TextField(blank=False, default='')
     tweet_count = models.TextField(blank=False, default='')
     keyword = models.TextField(blank=False, default='')
+    language = models.TextField(blank=False, default='')
 
     def __str__(self):
         return self.name

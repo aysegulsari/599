@@ -61,6 +61,7 @@ def collect_tweets(request):
 
     keyword = request.POST.get('keyword')
     count = request.POST.get('count')
+    language = request.POST.get('language')
     if not count:
         count = "100"
     start_date = request.POST.get('start')
@@ -72,7 +73,7 @@ def collect_tweets(request):
     i = 0
     data = []
     api = utils.get_api()
-    for tweet in tweepy.Cursor(api.search, q=keyword + ' -filter:retweets', count=count, lang='en',
+    for tweet in tweepy.Cursor(api.search, q=keyword + ' -filter:retweets', count=count, lang=language,
                                tweet_mode='extended', since=start_date,
                                until=end_date).items():
         data.append(tweet)
@@ -91,7 +92,7 @@ def collect_tweets(request):
     count = len(data)
 
     myModels.Report.objects.create(name=name, time_interval=time_interval, keyword=keyword, user=user,
-                                   tweet_count=count)
+                                   tweet_count=count, language=language)
     reports = myModels.Report.objects.filter(name=name, user=user)
     if len(reports) == 0:  # report could not saved
         temp_result = {'data': "report could not saved"}
