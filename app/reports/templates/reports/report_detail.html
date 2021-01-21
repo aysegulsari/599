@@ -49,10 +49,6 @@
                 <th>Tweet Text</th>
                 <th>Category</th>
                 <th>Sentiment</th>
-                <th>Neutral</th>
-                <th>Negative</th>
-                <th>Positive</th>
-                <th>Compound</th>
             </tr>
             </thead>
             <tfoot>
@@ -62,10 +58,6 @@
                 <th>Tweet Text</th>
                 <th>Category</th>
                 <th>Sentiment</th>
-                <th>Neutral</th>
-                <th>Negative</th>
-                <th>Positive</th>
-                <th>Compound</th>
             </tr>
             </tfoot>
         </table>
@@ -81,11 +73,12 @@
         //document.getElementById("button2").style.visibility = 'hidden'
     }
 
-    tweets = {}
+    let tweets = {};
+    let isDatatableFilled = false
     name = document.getElementById("name").innerHTML
     $("#button").click(function () {
 
-        if (tweets.count == undefined) {
+        if (!isDatatableFilled) {
             tweets = $.ajax({
                 type: 'POST',
                 async: false,
@@ -95,9 +88,15 @@
                     'name': name,
                 }
             }).responseJSON;
-
+            isDatatableFilled = true;
             $('#datatable').DataTable({
                 destroy: true,
+                searchPanes: {
+                    threshold: 1,
+                    columns: [1, 3, 4]
+                },
+                responsive: true,
+                dom: '<"dtsp-verticalContainer"<"dtsp-verticalPanes"P>l<"dtsp-dataTable"frtip>>',
                 "processing": true,
                 data: tweets['data']
             });

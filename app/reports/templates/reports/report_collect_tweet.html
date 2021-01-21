@@ -2,84 +2,78 @@
 
 <form>
     {% block report_content %}
-    <h2>Create Report</h2>
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-default2">Report Name</span>
+    <div class="jumbotron jumbotron-fluid">
+        <h2>Create Report</h2>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-default2">Report Name</span>
+            </div>
+            <input type="text" maxlength="50" class="form-control" aria-label="Default"
+                   aria-describedby="inputGroup-sizing-default" id="name" name="name" required>
         </div>
-        <input type="text" maxlength="50" class="form-control" aria-label="Default"
-               aria-describedby="inputGroup-sizing-default" id="name" name="name" required>
-    </div>
 
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-default3">Keywords</span>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-default3">Keywords</span>
+            </div>
+            <div class="form-control tags" id="tags">
+                <input type="text" class="labelinput">
+                <input type="hidden" name="result" id="keyword" name="keyword" required>
+            </div>
         </div>
-        <div class="form-control tags" id="tags">
-            <input type="text" class="labelinput">
-            <input type="hidden" name="result" id="keyword" name="keyword" required>
-        </div>
-    </div>
 
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-default4">Tweet Count</span>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-default4">Tweet Count</span>
+            </div>
+            <input type="text" maxlength="50" class="form-control" aria-label="Default"
+                   aria-describedby="inputGroup-sizing-default" id="count" name="count" required>
         </div>
-        <input type="text" maxlength="50" class="form-control" aria-label="Default"
-               aria-describedby="inputGroup-sizing-default" id="count" name="count" required>
-    </div>
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-default5">Time interval</span>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-default5">Time interval</span>
+            </div>
+            <input type="text" name="daterange" value="01/12/2021 - 01/16/2021" required>
         </div>
-        <input type="text" name="daterange" value="01/12/2021 - 01/16/2021" required>
-    </div>
 
-    <div>
-        <button class="btn-warning" id='button' type="button"><span class="fa fa-plus"></span>Collect Tweets
-        </button>
-        <!-- <button class="btn-warning" id='button2' type="button"><span class="fa fa-plus"></span>Save Report
-         </button> -->
-    </div>
-    <br>
-    <br>
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <p id="note"> Please wait until tweets are loaded...</p>
+        <div>
+            <button class="btn-warning" id='button' type="button"><span class="fa fa-plus"></span>Collect Tweets
+            </button>
+            <!-- <button class="btn-warning" id='button2' type="button"><span class="fa fa-plus"></span>Save Report
+             </button> -->
         </div>
-    </div>
-    <br>
-    <br>
-    <div class="input-group mb-3">
-        <table id="datatable" class="display" style="width:100%">
-            <thead>
-            <tr>
-                <th>Tweet ID</th>
-                <th>Creation Date</th>
-                <th>Tweet Text</th>
-                <th>Category</th>
-                <th>Sentiment</th>
-                <th>Neutral</th>
-                <th>Negative</th>
-                <th>Positive</th>
-                <th>Compound</th>
-            </tr>
-            </thead>
-            <tfoot>
-            <tr>
-                <th>Tweet ID</th>
-                <th>Creation Date</th>
-                <th>Tweet Text</th>
-                <th>Category</th>
-                <th>Sentiment</th>
-                <th>Neutral</th>
-                <th>Negative</th>
-                <th>Positive</th>
-                <th>Compound</th>
-            </tr>
-            </tfoot>
-        </table>
-    </div>
+        <div class="jumbotron jumbotron-fluid">
+            <br>
+            <br>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <p id="note"> Please wait until tweets are loaded...</p>
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="input-group mb-3">
+                <table id="datatable" class="display" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>Tweet ID</th>
+                        <th>Creation Date</th>
+                        <th>Tweet Text</th>
+                        <th>Category</th>
+                        <th>Sentiment</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th>Tweet ID</th>
+                        <th>Creation Date</th>
+                        <th>Tweet Text</th>
+                        <th>Category</th>
+                        <th>Sentiment</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
 </form>
 
 <script>
@@ -153,6 +147,12 @@
                 //document.getElementById("button2").style.visibility = 'visible'
                 $('#datatable').DataTable({
                     destroy: true,
+                    searchPanes: {
+                        threshold: 1,
+                        columns: [1, 3, 4]
+                    },
+                    responsive: true,
+                    dom: '<"dtsp-verticalContainer"<"dtsp-verticalPanes"P>l<"dtsp-dataTable"frtip>>',
                     "processing": true,
                     data: tweets['data']
                 });
