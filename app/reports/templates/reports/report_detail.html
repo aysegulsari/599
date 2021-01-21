@@ -2,51 +2,55 @@
 
 {% block report_content %}
 <div class="container">
-    <h2 id=>{{report.name}}</h2>
 
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-default3">Keywords</span>
+    <div class="jumbotron">
+        <h2 id=>{{report.name}}</h2>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-default3">Keywords</span>
+            </div>
+            <input type="text" maxlength="50" class="form-control" aria-label="Default"
+                   aria-describedby="inputGroup-sizing-default" id="keyword" name="keyword" disabled
+                   value="{{report.keyword}}">
         </div>
-        <input type="text" maxlength="50" class="form-control" aria-label="Default"
-               aria-describedby="inputGroup-sizing-default" id="keyword" name="keyword" disabled
-               value="{{report.keyword}}">
-    </div>
 
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-default4">Tweet Count</span>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-default4">Tweet Count</span>
+            </div>
+            <input type="text" maxlength="50" class="form-control" aria-label="Default"
+                   aria-describedby="inputGroup-sizing-default" id="count" name="count" disabled
+                   value="{{report.tweet_count}}">
         </div>
-        <input type="text" maxlength="50" class="form-control" aria-label="Default"
-               aria-describedby="inputGroup-sizing-default" id="count" name="count" disabled
-               value="{{report.tweet_count}}">
-    </div>
 
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-default">Language</span>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-default">Language</span>
+            </div>
+            <input type="text" maxlength="50" class="form-control" aria-label="Default"
+                   aria-describedby="inputGroup-sizing-default" id="language" name="language" disabled
+                   value="{{report.language}}">
         </div>
-         <input type="text" maxlength="50" class="form-control" aria-label="Default"
-               aria-describedby="inputGroup-sizing-default" id="language" name="language" disabled
-               value="{{report.language}}">
-    </div>
 
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-default5">Time interval</span>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-default5">Time interval</span>
+            </div>
+            <input type="text" maxlength="50" class="form-control" aria-label="Default"
+                   aria-describedby="inputGroup-sizing-default" value="{{report.time_interval}}" disabled>
         </div>
-        <input type="text" maxlength="50" class="form-control" aria-label="Default"
-               aria-describedby="inputGroup-sizing-default" value="{{report.time_interval}}" disabled>
+
+        <div>
+            <button class="btn-warning" id='button' type="button"><span class="fa fa-plus"></span>Show/Hide Tweets
+            </button>
+            <button class="btn-warning" id='button2' type="button"><span class="fa fa-plus"></span>Analyze Tweets
+            </button>
+        </div>
+        <br>
+        <p id="name">{{report.name}}</p>
     </div>
 
-    <div>
-        <button class="btn-warning" id='button' type="button"><span class="fa fa-plus"></span>Show/Hide Tweets
-        </button>
-        <button class="btn-warning" id='button2' type="button"><span class="fa fa-plus"></span>Analyze Tweets
-        </button>
-    </div>
-    <br>
-    <p id="name">{{report.name}}</p>
     <br>
     <br>
     <br>
@@ -73,7 +77,7 @@
         </table>
     </div>
 </div>
-</div>
+
 
 <script>
     window.onload = function (e) {

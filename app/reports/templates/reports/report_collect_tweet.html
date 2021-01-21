@@ -2,58 +2,59 @@
 
 <form>
     {% block report_content %}
-    <div class="jumbotron jumbotron-fluid">
-        <h2>Create Report</h2>
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default2">Report Name</span>
-            </div>
-            <input type="text" maxlength="50" class="form-control" aria-label="Default"
-                   aria-describedby="inputGroup-sizing-default" id="name" name="name" required>
-        </div>
+    <div class="container">
 
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default3">Keywords</span>
+        <div class="jumbotron">
+            <h2>Create Report</h2>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default2">Report Name</span>
+                </div>
+                <input type="text" maxlength="50" class="form-control" aria-label="Default"
+                       aria-describedby="inputGroup-sizing-default" id="name" name="name" required>
             </div>
-            <div class="form-control tags" id="tags">
-                <input type="text" class="labelinput">
-                <input type="hidden" name="result" id="keyword" name="keyword" required>
-            </div>
-        </div>
 
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default4">Tweet Count</span>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default3">Keywords</span>
+                </div>
+                <div class="form-control tags" id="tags">
+                    <input type="text" class="labelinput">
+                    <input type="hidden" name="result" id="keyword" name="keyword" required>
+                </div>
             </div>
-            <input type="text" maxlength="50" class="form-control" aria-label="Default"
-                   aria-describedby="inputGroup-sizing-default" id="count" name="count" required>
-        </div>
 
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default">Language</span>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default4">Tweet Count</span>
+                </div>
+                <input type="text" maxlength="50" class="form-control" aria-label="Default"
+                       aria-describedby="inputGroup-sizing-default" id="count" name="count" required>
             </div>
-            <select class="form-control" id="language">
-                <option value="en">en</option>
-                <option value="tr">tr</option>
-            </select>
-        </div>
 
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default5">Time interval</span>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Language</span>
+                </div>
+                <select class="form-control" id="language">
+                    <option value="en">en</option>
+                    <option value="tr">tr</option>
+                </select>
             </div>
-            <input type="text" name="daterange" value="01/12/2021 - 01/16/2021" required>
-        </div>
 
-        <div>
-            <button class="btn-warning" id='button' type="button"><span class="fa fa-plus"></span>Collect Tweets
-            </button>
-            <!-- <button class="btn-warning" id='button2' type="button"><span class="fa fa-plus"></span>Save Report
-             </button> -->
-        </div>
-        <div class="jumbotron jumbotron-fluid">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default5">Time interval</span>
+                </div>
+                <input type="text" name="daterange" value="01/12/2021 - 01/16/2021" required>
+            </div>
+
+            <div>
+                <button class="btn-warning" id='button' type="button"><span class="fa fa-plus"></span>Collect Tweets
+                </button>
+                <!-- <button class="btn-warning" id='button2' type="button"><span class="fa fa-plus"></span>Save Report
+                 </button> -->
+            </div>
             <br>
             <br>
             <div class="input-group mb-3">
@@ -61,30 +62,31 @@
                     <p id="note"> Please wait until tweets are loaded...</p>
                 </div>
             </div>
-            <br>
-            <br>
-            <div class="input-group mb-3">
-                <table id="datatable" class="display" style="width:100%">
-                    <thead>
-                    <tr>
-                        <th>Tweet ID</th>
-                        <th>Creation Date</th>
-                        <th>Tweet Text</th>
-                        <th>Category</th>
-                        <th>Sentiment</th>
-                    </tr>
-                    </thead>
-                    <tfoot>
-                    <tr>
-                        <th>Tweet ID</th>
-                        <th>Creation Date</th>
-                        <th>Tweet Text</th>
-                        <th>Category</th>
-                        <th>Sentiment</th>
-                    </tr>
-                    </tfoot>
-                </table>
-            </div>
+        </div>
+    </div>
+
+    <div class="input-group mb-3">
+        <table id="datatable" class="display" style="width:100%">
+            <thead>
+            <tr>
+                <th>Tweet ID</th>
+                <th>Creation Date</th>
+                <th>Tweet Text</th>
+                <th>Category</th>
+                <th>Sentiment</th>
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+                <th>Tweet ID</th>
+                <th>Creation Date</th>
+                <th>Tweet Text</th>
+                <th>Category</th>
+                <th>Sentiment</th>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
 </form>
 
 <script>
@@ -141,7 +143,7 @@
                     'count': count,
                     'start': startDate,
                     'end': endDate,
-                    'language':language
+                    'language': language
                 }
             }).responseJSON;
             document.body.style.cursor = "default";
