@@ -30,16 +30,17 @@ def collect_tweets(request):
         return JsonResponse(temp_result, safe=False)
 
     keyword = request.POST.get('keyword')
+    language= request.POST.get('language')
     start_date = request.POST.get('start')
     end_date = request.POST.get('end')
     time_interval = request.POST.get('start') + " / " + request.POST.get('end')
 
-    myReport = myModels.Report.objects.create(name=name, time_interval=time_interval, keyword=keyword, user=user)
+    myReport = myModels.Report.objects.create(name=name, time_interval=time_interval, keyword=keyword, user=user,language=language)
     if myReport is None:  # report could not saved
         temp_result = {'data': "report could not saved"}
         return JsonResponse(temp_result, safe=False)
 
-    utils.get_tweets_via_api(myReport, keyword, start_date, end_date)
+    utils.get_tweets_via_api(myReport, keyword,language, start_date, end_date)
 
     tweets = myModels.Tweet.objects.filter(reports=myReport)
     tweets_t = [

@@ -32,6 +32,7 @@
                 <input type="text" maxlength="50" class="form-control" aria-label="Default"
                        aria-describedby="inputGroup-sizing-default" id="count" name="count" required>
             </div>
+            -->
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -42,7 +43,6 @@
                     <option value="tr">tr</option>
                 </select>
             </div>
-            -->
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -97,7 +97,7 @@
     let tweets = [];
     let keyword = '';
     //let count = '';
-    //let language = '';
+    let language = '';
     $(function () {
         $('input[name="daterange"]').daterangepicker({
             opens: 'left'
@@ -115,7 +115,7 @@
 
         keyword = document.getElementById("keyword").value;
         //count = document.getElementById("count").value;
-        //language = $("#language").find('option:selected').val();
+        language = $("#language").find('option:selected').val();
         let name = document.getElementById("name").value;
 
         if (keyword.length == 0 /*|| count.length == 0*/ || name.length == 0) {
@@ -138,8 +138,8 @@
                     'name': name,
                     //'count': count,
                     'start': startDate,
-                    'end': endDate//,
-                    //'language': language
+                    'end': endDate,
+                    'language': language
                 }
             }).responseJSON;
             document.body.style.cursor = "default";

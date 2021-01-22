@@ -119,7 +119,7 @@ def get_context_type(list_ids):
     return context
 
 
-def get_tweets_via_api(report, keyword, start_date, end_date):
+def get_tweets_via_api(report, keyword, language, start_date, end_date):
     date_list = pd.date_range(start_date, end_date)
     total_tweet_count_report = 0;
     i = 0
@@ -127,76 +127,86 @@ def get_tweets_via_api(report, keyword, start_date, end_date):
         while i < len(date_list) - 1:
             start = date_list[i].strftime("%Y-%m-%d") + "T00:00:00.000Z"
             end = date_list[i].strftime("%Y-%m-%d") + "T08:00:00.000Z"
-            collect_tweet_for_time_interval(report, keyword, start, end, total_tweet_count_report)
+            collect_tweet_for_time_interval(report, keyword, language, start, end, total_tweet_count_report)
 
             start = date_list[i].strftime("%Y-%m-%d") + "T08:00:00.000Z"
             end = date_list[i].strftime("%Y-%m-%d") + "T12:00:00.000Z"
-            collect_tweet_for_time_interval(report, keyword, start, end, total_tweet_count_report)
+            collect_tweet_for_time_interval(report, keyword, language, start, end, total_tweet_count_report)
 
             start = date_list[i].strftime("%Y-%m-%d") + "T12:00:00.000Z"
             end = date_list[i].strftime("%Y-%m-%d") + "T18:00:00.000Z"
-            collect_tweet_for_time_interval(report, keyword, start, end, total_tweet_count_report)
+            collect_tweet_for_time_interval(report, keyword, language, start, end, total_tweet_count_report)
 
             start = date_list[i].strftime("%Y-%m-%d") + "T18:00:00.000Z"
             end = date_list[i + 1].strftime("%Y-%m-%d") + "T00:00:00.000Z"
-            collect_tweet_for_time_interval(report, keyword, start, end, total_tweet_count_report)
+            collect_tweet_for_time_interval(report, keyword, language, start, end, total_tweet_count_report)
 
             i = i + 1
     else:
         start = date_list[0].strftime("%Y-%m-%d") + "T00:00:00.000Z"
         end = date_list[0].strftime("%Y-%m-%d") + "T08:00:00.000Z"
-        collect_tweet_for_time_interval(report, keyword, start, end, total_tweet_count_report)
+        collect_tweet_for_time_interval(report, keyword, language, start, end, total_tweet_count_report)
 
         start = date_list[0].strftime("%Y-%m-%d") + "T08:00:00.000Z"
         end = date_list[0].strftime("%Y-%m-%d") + "T12:00:00.000Z"
-        collect_tweet_for_time_interval(report, keyword, start, end, total_tweet_count_report)
+        collect_tweet_for_time_interval(report, keyword, language, start, end, total_tweet_count_report)
 
         start = date_list[0].strftime("%Y-%m-%d") + "T12:00:00.000Z"
         end = date_list[0].strftime("%Y-%m-%d") + "T18:00:00.000Z"
-        collect_tweet_for_time_interval(report, keyword, start, end, total_tweet_count_report)
+        collect_tweet_for_time_interval(report, keyword, language, start, end, total_tweet_count_report)
 
         start = date_list[0].strftime("%Y-%m-%d") + "T18:00:00.000Z"
         end = date_list[1].strftime("%Y-%m-%d") + "T00:00:00.000Z"
-        collect_tweet_for_time_interval(report, keyword, start, end, total_tweet_count_report)
+        collect_tweet_for_time_interval(report, keyword, language, start, end, total_tweet_count_report)
 
 
-def collect_tweet_for_time_interval(report, keyword, start_date, end_date, total_tweet_count_report):
-    url = "https://api.twitter.com/2/tweets/search/recent?place.fields=country&query=" + keyword + "&start_time=" + start_date + \
+def collect_tweet_for_time_interval(report, keyword, language, start_date, end_date, total_tweet_count_report):
+    print("lllllllllllllllllll", language)
+    query = keyword + " has:hashtags lang=" + language
+    url = "https://api.twitter.com/2/tweets/search/recent?place.fields=country&query=" + query + "&start_time=" + start_date + \
           "&end_time=" + end_date + "&tweet.fields=id,text,context_annotations,created_at,lang,entities,public_metrics&max_results=100"
     print(url)
     response = requests.request("GET", url, headers=headers)
     tweets = response.json()
-    total_tweet_count_report = total_tweet_count_report + len(tweets['data'])
-    for t in tweets['data']:
-        print("--------------------------------------------")
-        print("--------------------------------------------")
-        print("--------------------------------------------")
-        print("--------------------------------------------")
-        print(t['text'])
-        sentiment = get_sentiment(t['text'])
-        tweet = myModels.Tweet.objects.create(tweet_id=t['id'], creation_date=t['created_at'],
-                                              tweet_text=t['text'], sentiment=sentiment, lang=t['lang'],
-                                              retweet_count=t['public_metrics']['retweet_count'],
-                                              reply_count=t['public_metrics']['reply_count'],
-                                              like_count=t['public_metrics']['like_count'])
+    count = 0
+    if 'data' in tweets:
+        count = len(tweets['data'])
+        for t in tweets['data']:
+            print("--------------------------------------------")
+            print("--------------------------------------------")
+            print("--------------------------------------------")
+            print("--------------------------------------------")
+            print(t['text'])
+            sentiment = get_sentiment(t['text'])
+            if t['lang'] == language:
+                tweet = myModels.Tweet.objects.create(tweet_id=t['id'], creation_date=t['created_at'],
+                                                      tweet_text=t['text'], sentiment=sentiment, lang=t['lang'],
+                                                      retweet_count=t['public_metrics']['retweet_count'],
+                                                      reply_count=t['public_metrics']['reply_count'],
+                                                      like_count=t['public_metrics']['like_count'])
 
-        tweet.reports.add(report)
+                tweet.reports.add(report)
 
-        if 'entities' in t:
-            if 'hashtags' in t['entities']:
-                if 'tag' in t['entities']['hashtags']:
-                    hashtag = myModels.Hashtag.objects.create(tweet=tweet, tag=t['entities']['hashtags']['tag'])
+                if 'entities' in t:
+                    if 'hashtags' in t['entities']:
+                        for hash in t['entities']['hashtags']:
+                            if 'tag' in hash:
+                                hashtag = myModels.Hashtag.objects.create(tweet=tweet,
+                                                                          tag=hash['tag'])
 
-        if 'context_annotations' in t:
-            for c in t['context_annotations']:
-                if 'domain' in c and 'entity' in c and 'description' in c['domain']:
-                    context_annotation = myModels.ContextAnnotation.objects.create(tweet=tweet,
-                                                                                   domain_id=c['domain']['id'],
-                                                                                   domain_name=c['domain']['name'],
-                                                                                   domain_desc=c['domain'][
-                                                                                       'description'],
-                                                                                   entity_id=c['entity']['id'],
-                                                                                   entity_name=c['entity']['name'])
+                if 'context_annotations' in t:
+                    for c in t['context_annotations']:
+                        if 'domain' in c and 'entity' in c and 'description' in c['domain']:
+                            context_annotation = myModels.ContextAnnotation.objects.create(tweet=tweet,
+                                                                                           domain_id=c['domain']['id'],
+                                                                                           domain_name=c['domain'][
+                                                                                               'name'],
+                                                                                           domain_desc=c['domain'][
+                                                                                               'description'],
+                                                                                           entity_id=c['entity']['id'],
+                                                                                           entity_name=c['entity'][
+                                                                                               'name'])
+    total_tweet_count_report = count
 
 
 def get_sentiment(text):
