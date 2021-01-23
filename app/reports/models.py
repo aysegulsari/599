@@ -16,6 +16,7 @@ class Report(models.Model):
     tweet_count = models.CharField(blank=False, max_length=10, default='')
     keyword = models.CharField(blank=False, max_length=50, default='')
     language = models.CharField(blank=False, max_length=10, default='')
+    hashtag = models.CharField(blank=False, max_length=5, default='')
 
     def __str__(self):
         return self.name
@@ -32,7 +33,7 @@ class Report(models.Model):
 
 
 class Tweet(models.Model):
-    reports = models.ManyToManyField(Report)
+    report = models.ForeignKey(Report, on_delete=models.CASCADE)
     tweet_id = models.CharField(blank=False, max_length=100, default='')
     creation_date = models.CharField(blank=False, max_length=100, default='')
     tweet_text = models.TextField(blank=False, default='')

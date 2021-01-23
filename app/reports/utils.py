@@ -135,54 +135,53 @@ ends = {"00:00-03:00": "T02:59:59.000Z", "03:00-06:00": "T05:59:59.000Z",
         "18:00-21:00": "T20:59:59.000Z", "21:00-23:59": "T23:59:59.000Z"}
 
 
-def get_tweets_via_api(report, keyword, language, start_date, end_date):
+def get_tweets_via_api(report, keyword, language, start_date, end_date, include_hashtags):
     date_list = pd.date_range(start_date, end_date)
     total_tweet_count_report = 0;
     i = 0
-    if len(date_list) > 2:
-        while i < len(date_list):
-            for time_slot in time_slots:
-                start = date_list[i].strftime("%Y-%m-%d") + starts[time_slot]
-                end = date_list[i].strftime("%Y-%m-%d") + ends[time_slot]
-                total_tweet_count_report = total_tweet_count_report + collect_tweet_for_interval(report, keyword,
-                                                                                                 language, start,
-                                                                                                 end)
-            i = i + 1
-    else:
+
+    while i < len(date_list):
         for time_slot in time_slots:
             start = date_list[i].strftime("%Y-%m-%d") + starts[time_slot]
             end = date_list[i].strftime("%Y-%m-%d") + ends[time_slot]
             total_tweet_count_report = total_tweet_count_report + collect_tweet_for_interval(report, keyword,
                                                                                              language, start,
-                                                                                             end)
+                                                                                             end, include_hashtags)
+        i = i + 1
+
     report.tweet_count = total_tweet_count_report
     report.save(update_fields=['tweet_count'])
 
 
-def collect_tweet_for_interval(report, keyword, language, start_date, end_date):
-    # print("language", language)
-    query = keyword + " has:hashtags lang=" + language + " -is:retweet"
+def collect_tweet_for_interval(report, keyword, language, start_date, end_date, include_hashtags):
+    print("language", language)
+    query = keyword
+    if include_hashtags == 'yes':
+        query = query + " has:hashtags"
+    if language != 'all':
+        query = query + " lang=" + language
     url = "https://api.twitter.com/2/tweets/search/recent?query=" + query + "&start_time=" + start_date + \
           "&end_time=" + end_date + "&max_results=100&place.fields=country&tweet.fields=id,text,context_annotations,created_at,lang,entities,public_metrics"
 
-    # print(url)
+    print(url)
     response = requests.request("GET", url, headers=headers)
     tweets = response.json()
     count = 0
     if 'data' in tweets:
         count = len(tweets['data'])
+        print("count", count)
         for t in tweets['data']:
-            # print("----------------")
+            print("----------------")
             # print(t['text'])
             sentiment = get_sentiment(t['text'])
             if t['lang'] == language:
-                tweet = myModels.Tweet.objects.create(tweet_id=t['id'], creation_date=t['created_at'],
+                tweet = myModels.Tweet.objects.create(report=report,tweet_id=t['id'], creation_date=t['created_at'],
                                                       tweet_text=t['text'], lang=t['lang'],
                                                       retweet_count=t['public_metrics']['retweet_count'],
                                                       reply_count=t['public_metrics']['reply_count'],
                                                       like_count=t['public_metrics']['like_count'])
 
-                tweet.reports.add(report)
+                #tweet.reports.add(report)
 
                 if 'entities' in t:
                     if 'hashtags' in t['entities']:

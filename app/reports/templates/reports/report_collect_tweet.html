@@ -8,7 +8,7 @@
             <h2>Create Report</h2>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-default2">Report Name</span>
+                    <span class="input-group-text" id="inputGroup-sizing-default2">Report name</span>
                 </div>
                 <input type="text" maxlength="50" class="form-control" aria-label="Default"
                        aria-describedby="inputGroup-sizing-default" id="name" name="name" required>
@@ -41,6 +41,17 @@
                 <select class="form-control" id="language">
                     <option value="en">en</option>
                     <option value="tr">tr</option>
+                    <option value="all">all</option>
+                </select>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default4">Get only tweets with hashtags</span>
+                </div>
+                <select class="form-control" id="hashtag">
+                    <option value="yes">yes</option>
+                    <option value="no">no</option>
                 </select>
             </div>
 
@@ -74,7 +85,6 @@
                 <th>Tweet ID</th>
                 <th>Creation Date</th>
                 <th>Tweet Text</th>
-                <th>Sentiment</th>
                 <th>Language</th>
                 <th>Retweet Count</th>
                 <th>Reply Count</th>
@@ -98,6 +108,7 @@
     let keyword = '';
     //let count = '';
     let language = '';
+    let hashtag = ';'
     $(function () {
         $('input[name="daterange"]').daterangepicker({
             opens: 'left'
@@ -116,6 +127,7 @@
         keyword = document.getElementById("keyword").value;
         //count = document.getElementById("count").value;
         language = $("#language").find('option:selected').val();
+        hashtag = $("#hashtag").find('option:selected').val();
         let name = document.getElementById("name").value;
 
         if (keyword.length == 0 /*|| count.length == 0*/ || name.length == 0) {
@@ -139,7 +151,8 @@
                     //'count': count,
                     'start': startDate,
                     'end': endDate,
-                    'language': language
+                    'language': language,
+                    'hashtag':hashtag
                 }
             }).responseJSON;
             document.body.style.cursor = "default";
@@ -161,7 +174,7 @@
                     destroy: true,
                     searchPanes: {
                         threshold: 1,
-                        columns: [1, 3, 4, 5, 6, 7]
+                        columns: [1, 3, 4, 5, 6]
                     },
                     responsive: true,
                     dom: '<"dtsp-verticalContainer"<"dtsp-verticalPanes"P>l<"dtsp-dataTable"frtip>>',
