@@ -42,7 +42,8 @@ def collect_tweets(request):
         temp_result = {'data': "report could not saved"}
         return JsonResponse(temp_result, safe=False)
 
-    utils.get_tweets_via_api(myReport, keyword, language, start_date, end_date, include_hashtags)
+    #utils.get_tweets_via_api(myReport, keyword, language, start_date, end_date, include_hashtags)
+    utils.get_tweets_via_tweepy(myReport, keyword, language, start_date, end_date, include_hashtags)
 
     tweets = myModels.Tweet.objects.filter(report=myReport)
     tweets_t = [

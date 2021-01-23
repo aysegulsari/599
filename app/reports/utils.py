@@ -155,11 +155,9 @@ def get_tweets_via_api(report, keyword, language, start_date, end_date, include_
 
 def collect_tweet_for_interval(report, keyword, language, start_date, end_date, include_hashtags):
     print("language", language)
-    query = keyword
-    if include_hashtags == 'yes':
-        query = query + " has:hashtags"
-    if language != 'all':
-        query = query + " lang=" + language
+
+    query = get_query(keyword, include_hashtags, language)
+
     url = "https://api.twitter.com/2/tweets/search/recent?query=" + query + "&start_time=" + start_date + \
           "&end_time=" + end_date + "&max_results=100&place.fields=country&tweet.fields=id,text,context_annotations,created_at,lang,entities,public_metrics"
 
@@ -173,39 +171,81 @@ def collect_tweet_for_interval(report, keyword, language, start_date, end_date, 
     if 'data' in tweets:
         count = len(tweets['data'])
         print("count", count)
-        for t in tweets['data']:
-            print("----------------")
-            # print(t['text'])
-            sentiment = get_sentiment(t['text'])
-            if t['lang'] == language:
-                tweet = myModels.Tweet.objects.create(report=report,tweet_id=t['id'], creation_date=t['created_at'],
-                                                      tweet_text=t['text'], lang=t['lang'],
-                                                      retweet_count=t['public_metrics']['retweet_count'],
-                                                      reply_count=t['public_metrics']['reply_count'],
-                                                      like_count=t['public_metrics']['like_count'])
-
-                #tweet.reports.add(report)
-
-                if 'entities' in t:
-                    if 'hashtags' in t['entities']:
-                        for hash in t['entities']['hashtags']:
-                            if 'tag' in hash:
-                                hashtag = myModels.Hashtag.objects.create(tweet=tweet,
-                                                                          tag=hash['tag'])
-
-                if 'context_annotations' in t:
-                    for c in t['context_annotations']:
-                        if 'domain' in c and 'entity' in c and 'description' in c['domain']:
-                            context_annotation = myModels.ContextAnnotation.objects.create(tweet=tweet,
-                                                                                           domain_id=c['domain']['id'],
-                                                                                           domain_name=c['domain'][
-                                                                                               'name'],
-                                                                                           domain_desc=c['domain'][
-                                                                                               'description'],
-                                                                                           entity_id=c['entity']['id'],
-                                                                                           entity_name=c['entity'][
-                                                                                               'name'])
+        store_tweets(tweets, language, report)
     return count
+
+
+def get_query(keyword, include_hashtags, language):
+    query = keyword
+    if include_hashtags == 'yes':
+        query = query + " has:hashtags"
+    if language != 'all':
+        query = query + " lang=" + language
+
+    # ######################' -filter:retweets###########
+    return query
+
+
+def store_tweets(tweets, language, report):
+    for t in tweets['data']:
+        print("----------------")
+        # print(t['text'])
+        sentiment = get_sentiment(t['text'])
+        if t['lang'] == language:
+            tweet = myModels.Tweet.objects.create(report=report, tweet_id=t['id'], creation_date=t['created_at'],
+                                                  tweet_text=t['text'], lang=t['lang'],
+                                                  retweet_count=t['public_metrics']['retweet_count'],
+                                                  reply_count=t['public_metrics']['reply_count'],
+                                                  like_count=t['public_metrics']['like_count'])
+
+            # tweet.reports.add(report)
+
+            if 'entities' in t:
+                if 'hashtags' in t['entities']:
+                    for hash in t['entities']['hashtags']:
+                        if 'tag' in hash:
+                            hashtag = myModels.Hashtag.objects.create(tweet=tweet,
+                                                                      tag=hash['tag'])
+
+            if 'context_annotations' in t:
+                for c in t['context_annotations']:
+                    if 'domain' in c and 'entity' in c and 'description' in c['domain']:
+                        context_annotation = myModels.ContextAnnotation.objects.create(tweet=tweet,
+                                                                                       domain_id=c['domain']['id'],
+                                                                                       domain_name=c['domain'][
+                                                                                           'name'],
+                                                                                       domain_desc=c['domain'][
+                                                                                           'description'],
+                                                                                       entity_id=c['entity']['id'],
+                                                                                       entity_name=c['entity'][
+                                                                                           'name'])
+
+
+def get_tweets_via_tweepy(report, keyword, language, start_date, end_date, include_hashtags):
+    date_list = pd.date_range(start_date, end_date)
+    count = len(date_list) * 1000
+    query = get_query(keyword, include_hashtags, language)
+    total_tweet_count_report = 0;
+    limit = count
+    tweets = []
+    api = get_api()
+    i = 0
+    for tweet in tweepy.Cursor(api.search, q=query, count=count,
+                               tweet_mode='extended', since=start_date,
+                               until=end_date).items():
+        total_tweet_count_report=total_tweet_count_report+1
+        # print("t",tweet)
+        tweets.append(tweet)
+        i += 1
+        if i >= limit:
+            break
+        else:
+            pass
+
+    store_tweets(tweets, language, report)
+
+    report.tweet_count = total_tweet_count_report
+    report.save(update_fields=['tweet_count'])
 
 
 def get_sentiment(text):
