@@ -15,7 +15,7 @@ class Report(models.Model):
     time_interval = models.CharField(blank=False, max_length=50, default='')
     tweet_count = models.CharField(blank=False, max_length=10, default='')
     keyword = models.CharField(blank=False, max_length=50, default='')
-    # language = models.CharField(blank=False, max_length=10, default='')
+    language = models.CharField(blank=False, max_length=10, default='')
     hashtag = models.CharField(blank=False, max_length=5, default='')
 
     def __str__(self):

@@ -165,7 +165,10 @@ def collect_tweet_for_interval(report, keyword, language, start_date, end_date, 
 
     print(url)
     response = requests.request("GET", url, headers=headers)
+    print(headers)
+
     tweets = response.json()
+    print(tweets)
     count = 0
     if 'data' in tweets:
         count = len(tweets['data'])

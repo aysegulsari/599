@@ -34,17 +34,17 @@ def collect_tweets(request):
     start_date = request.POST.get('start')
     end_date = request.POST.get('end')
     time_interval = request.POST.get('start') + " / " + request.POST.get('end')
-    include_hashtags = request.POST('hashtags')
+    include_hashtags = request.POST.get('hashtag')
 
     myReport = myModels.Report.objects.create(name=name, time_interval=time_interval, keyword=keyword, user=user,
-                                              hashtag=include_hashtags)
+                                              language=language, hashtag=include_hashtags)
     if myReport is None:  # report could not saved
         temp_result = {'data': "report could not saved"}
         return JsonResponse(temp_result, safe=False)
 
     utils.get_tweets_via_api(myReport, keyword, language, start_date, end_date, include_hashtags)
 
-    tweets = myModels.Tweet.objects.filter(reports=myReport)
+    tweets = myModels.Tweet.objects.filter(report=myReport)
     tweets_t = [
         [tw.tweet_id, tw.creation_date, tw.tweet_text, tw.lang, tw.retweet_count, tw.reply_count,
          tw.like_count] for tw in tweets]
@@ -62,7 +62,7 @@ def get_tweets(request):
     name = request.POST.get('name')
     reports = myModels.Report.objects.filter(name=name, user=request.user)
     print("rep ", len(reports))
-    tweets = myModels.Tweet.objects.filter(reports=reports[0])
+    tweets = myModels.Tweet.objects.filter(report=reports[0])
     print("twe ", tweets.count)
     tweets_t = [
         [tw.tweet_id, tw.creation_date, tw.tweet_text, tw.lang, tw.retweet_count, tw.reply_count,
