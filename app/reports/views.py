@@ -37,7 +37,7 @@ def collect_tweets(request):
     include_hashtags = request.POST('hashtags')
 
     myReport = myModels.Report.objects.create(name=name, time_interval=time_interval, keyword=keyword, user=user,
-                                              language=language, hashtag=include_hashtags)
+                                              hashtag=include_hashtags)
     if myReport is None:  # report could not saved
         temp_result = {'data': "report could not saved"}
         return JsonResponse(temp_result, safe=False)
