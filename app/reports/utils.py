@@ -177,10 +177,10 @@ def collect_tweet_for_interval(report, keyword, language, start_date, end_date, 
 
 def get_query(keyword, include_hashtags, language):
     query = keyword
-    if include_hashtags == 'yes':
-        query = query + " has:hashtags"
+    #if include_hashtags == 'yes':
+    #    query = query + " has:hashtags"
     if language != 'all':
-        query = query + " lang=" + language
+        query = query + " lang:" + language
 
     # ######################' -filter:retweets###########
     return query
@@ -225,6 +225,7 @@ def get_tweets_via_tweepy(report, keyword, language, start_date, end_date, inclu
     date_list = pd.date_range(start_date, end_date)
     count = len(date_list) * 1000
     query = get_query(keyword, include_hashtags, language)
+    print("query",query)
     total_tweet_count_report = 0;
     limit = count
     tweets = []
@@ -234,7 +235,7 @@ def get_tweets_via_tweepy(report, keyword, language, start_date, end_date, inclu
                                tweet_mode='extended', since=start_date,
                                until=end_date).items():
         total_tweet_count_report=total_tweet_count_report+1
-        # print("t",tweet)
+        print("t",tweet)
         tweets.append(tweet)
         i += 1
         if i >= limit:
