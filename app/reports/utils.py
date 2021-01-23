@@ -171,7 +171,7 @@ def collect_tweet_for_interval(report, keyword, language, start_date, end_date, 
     if 'data' in tweets:
         count = len(tweets['data'])
         print("count", count)
-        store_tweets(tweets, language, report)
+        store_tweets(tweets['data'], language, report)
     return count
 
 
@@ -187,7 +187,7 @@ def get_query(keyword, include_hashtags, language):
 
 
 def store_tweets(tweets, language, report):
-    for t in tweets['data']:
+    for t in tweets:
         print("----------------")
         # print(t['text'])
         sentiment = get_sentiment(t['text'])
