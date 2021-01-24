@@ -66,16 +66,18 @@ def get_tweets_via_tweepy(report, keyword, language, start_date, end_date, count
                                                   tweet_text=t.full_text, lang=t.lang,
                                                   retweet_count=t.retweet_count,
                                                   like_count=t.favorite_count)
-
+            hashtag = ''
             if str(t.id) in entity_dict:
                 entity = entity_dict[str(t.id)]
-                print(entity)
+                #print(entity)
                 if "hashtags" in entity:
                     for h in entity["hashtags"]:
                         if 'tag' in h:
-                            myModels.Hashtag.objects.create(tweet=tweet,
-                                                            tag=h["tag"])
+                            myModels.Hashtag.objects.create(tweet=tweet, tag=h["tag"])
+                            hashtag = hashtag + h['tag'] + " "
 
+            tweet.hashtag_string = hashtag
+            tweet.save(update_fields=['hashtag_string'])
             if str(t.id) in context_dict:
                 context = context_dict[str(t.id)]
                 # print(context)
@@ -88,6 +90,7 @@ def get_tweets_via_tweepy(report, keyword, language, start_date, end_date, count
                                                                   domain_desc=c["domain"]["description"],
                                                                   entity_id=c["entity"]["id"],
                                                                   entity_name=c["entity"]["name"])
+
 
 
 def get_sentiment(text):
