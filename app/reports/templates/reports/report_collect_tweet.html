@@ -3,7 +3,6 @@
 <form>
     {% block report_content %}
     <div class="container">
-
         <div class="jumbotron">
             <h2>Create Report</h2>
             <div class="input-group mb-3">
@@ -24,16 +23,6 @@
                 </div>
             </div>
 
-            <!--
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-default4">Tweet Count</span>
-                </div>
-                <input type="text" maxlength="50" class="form-control" aria-label="Default"
-                       aria-describedby="inputGroup-sizing-default" id="count" name="count" required>
-            </div>
-            -->
-
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-default">Language</span>
@@ -47,16 +36,6 @@
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-default4">Get only tweets with hashtags</span>
-                </div>
-                <select class="form-control" id="hashtag">
-                    <option value="yes">yes</option>
-                    <option value="no">no</option>
-                </select>
-            </div>
-
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-default5">Time interval</span>
                 </div>
                 <input type="text" name="daterange" value="01/12/2021 - 01/16/2021" required>
@@ -65,8 +44,6 @@
             <div>
                 <button class="btn-warning" id='button' type="button"><span class="fa fa-plus"></span>Collect Tweets
                 </button>
-                <!-- <button class="btn-warning" id='button2' type="button"><span class="fa fa-plus"></span>Save Report
-                 </button> -->
             </div>
             <br>
             <br>
@@ -75,40 +52,24 @@
                     <p id="note"> Please wait until tweets are loaded...</p>
                 </div>
             </div>
+            <ul class="quoteList"></ul>
         </div>
-    </div>
-
-    <div class="input-group mb-3">
-        <table id="datatable" class="display" style="width:100%">
-            <thead>
-            <tr>
-                <th>Tweet ID</th>
-                <th>Creation Date</th>
-                <th>Tweet Text</th>
-                <th>Language</th>
-                <th>Retweet Count</th>
-                <th>Reply Count</th>
-                <th>Like Count</th>
-            </tr>
-            </thead>
-        </table>
     </div>
 </form>
 
 <script>
     window.onload = function (e) {
-        document.getElementById("datatable").style.visibility = 'hidden'
-        //document.getElementById("button2").style.visibility = 'hidden'
         document.getElementById("note").style.visibility = 'hidden'
     }
 
     let startDate = '2021-01-12';
     let endDate = '2021-01-16';
-    let tweets = [];
+    let st;
+    let en;
     let keyword = '';
-    //let count = '';
     let language = '';
-    let hashtag = ';'
+    let name = '';
+    let dates = [];
     $(function () {
         $('input[name="daterange"]').daterangepicker({
             opens: 'left'
@@ -119,77 +80,82 @@
         });
     });
 
+    function getDates(start, end) {
+        dates = [];
+        let currentDate = moment(start);
+        let final = moment(end);
+        while (currentDate <= final) {
+            dates.push(currentDate.format('YYYY-MM-DD'));
+            currentDate = moment(currentDate).add(1, 'days');
+        }
+        dates.push(currentDate.format('YYYY-MM-DD'));
+    }
+
     $("#button").click(function () {
         document.body.style.cursor = "progress";
-        document.getElementById("datatable").style.visibility = 'hidden'
-        //document.getElementById("button2").style.visibility = 'hidden'
-
+        name = document.getElementById("name").value;
         keyword = document.getElementById("keyword").value;
-        //count = document.getElementById("count").value;
         language = $("#language").find('option:selected').val();
-        hashtag = $("#hashtag").find('option:selected').val();
-        let name = document.getElementById("name").value;
 
-        if (keyword.length == 0 /*|| count.length == 0*/ || name.length == 0) {
+        if (keyword.length == 0 || name.length == 0) {
             alert('Please enter report name, keyword and tweet count!')
             document.body.style.cursor = "default";
         } else {
-            alert('Please wait until tweets are loaded!')
+            alert('Please wait until tweets are collected!')
             document.body.style.cursor = "progress";
             document.getElementById("note").style.visibility = 'visible'
-            document.getElementById("note").innerHTML = " Please wait until tweets are loaded..."
-
-            tweets = $.ajax({
+            document.getElementById("note").innerHTML = "Please wait until tweets are loaded..."
+            $.ajax({
                 type: 'POST',
                 async: false,
-                url: '{% url "reports:collect_tweets" %}',
+                url: '{% url "reports:create_report" %}',
                 dataType: 'json',
                 data: {
                     'keyword': keyword,
                     'name': name,
-                    //'count': count,
                     'start': startDate,
                     'end': endDate,
-                    'language': language,
-                    'hashtag':hashtag
+                    'language': language
                 }
-            }).responseJSON;
-            document.body.style.cursor = "default";
-
-            console.log(tweets)
-            if (tweets['data'] == "no tweet") {
-                document.getElementById("note").innerHTML = "No tweet found!Try different keywords"
-
-            } else if (tweets['data'] == "report name exists") {
-                document.getElementById("note").innerHTML = "Report name exist!Enter a different name"
-            } else if (tweets['data'] == "report could not saved") {
-                document.getElementById("note").innerHTML = "Report could not saved"
-            } else {
-
-                document.getElementById("note").innerHTML = "Tweets are loaded!"
-                document.getElementById("datatable").style.visibility = 'visible'
-                //document.getElementById("button2").style.visibility = 'visible'
-                $('#datatable').DataTable({
-                    destroy: true,
-                    searchPanes: {
-                        threshold: 1,
-                        columns: [1, 3, 4, 5, 6]
-                    },
-                    responsive: true,
-                    dom: '<"dtsp-verticalContainer"<"dtsp-verticalPanes"P>l<"dtsp-dataTable"frtip>>',
-                    "processing": true,
-                    data: tweets['data']
-                });
+            })
+            getDates(startDate, endDate);
+            for (let i = 0; i < dates.length - 1; i++) {
+                getData(dates[i], dates[i + 1]);
             }
+            document.body.style.cursor = "default";
         }
-    })
-    ;
+    });
 
+    analyzed_dates = [];
+    window.getData = function (start, end) {
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: '{% url "reports:collect_tweets" %}',
+            dataType: 'json',
+            data: {
+                'keyword': keyword,
+                'name': name,
+                'start': start,
+                'end': end,
+                'language': language
+            },
+            success: function (response) {
+                analyzed_dates.push(response)
+                if (dates.length == analyzed_dates.length) {
+                    alert("Date: " + response + " is finished.Please wait..")
+                    alert("Tweet collection is finished")
+                } else {
+                    alert("Date: " + response + " is finished.Please wait..")
+                }
+            }
+        })
+    }
 
     $(function () {
         $('#tags').tagInput();
     });
-    // Bootstrap 4
+
     $('#tags').tagInput({
         labelClass: "badge badge-success"
     });
