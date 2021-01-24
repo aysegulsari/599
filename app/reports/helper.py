@@ -17,58 +17,6 @@ ends = {"00:00-03:00": "T02:59:59.000Z", "03:00-06:00": "T05:59:59.000Z",
         "18:00-21:00": "T20:59:59.000Z", "21:00-23:59": "T23:59:59.000Z"}
 
 
-def get_id_context_dict(data):
-    id_context_dict = {}
-
-    if len(data) < 100:
-        id_list = ""
-        for tw in data:
-            if id_list == '':
-                id_list = str(tw.id)
-            else:
-                id_list = id_list + "," + str(tw.id)
-        response = get_context_response(id_list)
-        get_context(response, id_context_dict)
-    else:
-        for ctr in range(len(data) // 100):
-            id_list = ""
-            for tw in data[(ctr * 100):(ctr + 1) * 100]:
-                if id_list == '':
-                    id_list = str(tw.id)
-                else:
-                    id_list = id_list + "," + str(tw.id)
-            response = get_context_response(id_list)
-            get_context(response, id_context_dict)
-    return id_context_dict
-
-
-def get_context_response(ids):
-    tweet_fields = "tweet.fields=context_annotations"
-    print(ids)
-    url = "https://api.twitter.com/2/tweets?ids={}&{}".format(
-        ids,
-        tweet_fields
-    )
-    response = ""  # requests.request("GET", url, headers=headers)
-    return response
-
-
-def get_context(response, id_context_dict):
-    json_response = response.json()
-    list_ids = []
-    for tw in json_response['data']:
-        if 'context_annotations' in tw:
-            for x in tw['context_annotations']:
-                context_id = x['domain']['id']
-                if context_id not in list_ids:
-                    list_ids.append(context_id)
-        print(list_ids)
-        context = get_context_type(list_ids)
-        id_context_dict[tw['id']] = context
-
-    return id_context_dict
-
-
 def get_context_type(list_ids):
     politics_count = 0
     entertainment_count = 0
