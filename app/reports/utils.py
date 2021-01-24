@@ -40,7 +40,7 @@ def get_query(keyword, language):
 
 def get_tweets_via_tweepy(report, keyword, language, start_date, end_date):
     api = get_api()
-    count = 20
+    count = 500
     query = get_query(keyword, language)
     limit = count
     i = 0
@@ -82,12 +82,13 @@ def get_tweets_via_tweepy(report, keyword, language, start_date, end_date):
                 # print(context)
                 for c in context:
                     # print(c)
-                    myModels.ContextAnnotation.objects.create(tweet=tweet,
-                                                              domain_id=c["domain"]["id"],
-                                                              domain_name=c["domain"]["name"],
-                                                              domain_desc=c["domain"]["description"],
-                                                              entity_id=c["entity"]["id"],
-                                                              entity_name=c["entity"]["name"])
+                    if 'domain' in c and 'entity' in c and 'description' in c["domain"]:
+                        myModels.ContextAnnotation.objects.create(tweet=tweet,
+                                                                  domain_id=c["domain"]["id"],
+                                                                  domain_name=c["domain"]["name"],
+                                                                  domain_desc=c["domain"]["description"],
+                                                                  entity_id=c["entity"]["id"],
+                                                                  entity_name=c["entity"]["name"])
 
 
 def get_sentiment(text):
