@@ -66,18 +66,22 @@ def get_tweets_via_tweepy(report, keyword, language, start_date, end_date, count
                                                   tweet_text=t.full_text, lang=t.lang,
                                                   retweet_count=t.retweet_count,
                                                   like_count=t.favorite_count)
-            hashtag = ''
+            hashtag_string = ''
             if str(t.id) in entity_dict:
                 entity = entity_dict[str(t.id)]
-                #print(entity)
+                # print(entity)
                 if "hashtags" in entity:
                     for h in entity["hashtags"]:
                         if 'tag' in h:
                             myModels.Hashtag.objects.create(tweet=tweet, tag=h["tag"])
-                            hashtag = hashtag + h['tag'] + " "
+                            if hashtag_string == '':
+                                hashtag_string = hashtag_string + h['tag']
+                            else:
+                                hashtag_string = hashtag_string + " , " + h['tag']
 
-            tweet.hashtag_string = hashtag
-            tweet.save(update_fields=['hashtag_string'])
+            tweet.hashtag_string = hashtag_string
+
+            context_string = ''
             if str(t.id) in context_dict:
                 context = context_dict[str(t.id)]
                 # print(context)
@@ -90,7 +94,14 @@ def get_tweets_via_tweepy(report, keyword, language, start_date, end_date, count
                                                                   domain_desc=c["domain"]["description"],
                                                                   entity_id=c["entity"]["id"],
                                                                   entity_name=c["entity"]["name"])
+                        if context_string == '':
+                            context_string = context_string + c["domain"]["name"] + ":" + c["entity"]["name"]
+                        else:
+                            context_string = context_string + " , " + c["domain"]["name"] + ":" + c["entity"][
+                                "name"]
 
+            tweet.context_string = context_string
+            tweet.save(update_fields=['hashtag_string', 'context_string'])
 
 
 def get_sentiment(text):

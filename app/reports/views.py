@@ -75,12 +75,12 @@ def get_tweets(request):
     name = request.POST.get('name')
     reports = myModels.Report.objects.filter(name=name, user=request.user)
     tweets = myModels.Tweet.objects.filter(report=reports[0])
-    myReport=reports[0]
+    myReport = reports[0]
     myReport.tweet_count = str(len(tweets))
     myReport.save(update_fields=['tweet_count'])
     tweets_t = [
         [tw.tweet_id, tw.creation_date, tw.tweet_text, tw.lang, tw.retweet_count,
-         tw.like_count, tw.hashtag_string] for tw in tweets]
+         tw.like_count, tw.hashtag_string, tw.context_string] for tw in tweets]
     tweets_t = {'data': tweets_t}
 
     return JsonResponse(tweets_t, safe=False)
