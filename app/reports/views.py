@@ -80,7 +80,7 @@ def get_tweets(request):
     reports[0].tweet_count = len(tweets)
     reports[0].save(update_fields=['tweet_count'])
     tweets_t = [
-        [tw.tweet_id, tw.creation_date, tw.tweet_text, tw.lang, tw.retweet_count, tw.reply_count,
+        [tw.tweet_id, tw.creation_date, tw.tweet_text, tw.lang, tw.retweet_count,
          tw.like_count] for tw in tweets]
     tweets_t = {'data': tweets_t}
 
