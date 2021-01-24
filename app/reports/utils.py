@@ -38,11 +38,10 @@ def get_query(keyword, language):
     return query
 
 
-def get_tweets_via_tweepy(report, keyword, language, start_date, end_date):
+def get_tweets_via_tweepy(report, keyword, language, start_date, end_date, count):
     api = get_api()
-    count = 500
     query = get_query(keyword, language)
-    limit = count
+    limit = int(count)
     i = 0
     data = []
 

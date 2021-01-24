@@ -25,6 +25,18 @@
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default4">Number of tweets per day</span>
+                </div>
+                <select class="form-control" id="count">
+                    <option value="100">100</option>
+                    <option value="500">500</option>
+                    <option value="1000">1000</option>
+                    <option value="2000">2000</option>
+                </select>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-default">Language</span>
                 </div>
                 <select class="form-control" id="language">
@@ -64,12 +76,11 @@
 
     let startDate = '2021-01-12';
     let endDate = '2021-01-16';
-    let st;
-    let en;
     let keyword = '';
     let language = '';
     let name = '';
     let dates = [];
+    let count = '';
     $(function () {
         $('input[name="daterange"]').daterangepicker({
             opens: 'left'
@@ -96,7 +107,7 @@
         name = document.getElementById("name").value;
         keyword = document.getElementById("keyword").value;
         language = $("#language").find('option:selected').val();
-
+        count = $("#count").find('option:selected').val();
         if (keyword.length == 0 || name.length == 0) {
             alert('Please enter report name, keyword and tweet count!')
             document.body.style.cursor = "default";
@@ -104,7 +115,6 @@
             alert('Please wait until tweets are collected!')
             document.body.style.cursor = "progress";
             document.getElementById("note").style.visibility = 'visible'
-            document.getElementById("note").innerHTML = "Please wait until tweets are loaded..."
             $.ajax({
                 type: 'POST',
                 async: false,
@@ -126,7 +136,6 @@
         }
     });
 
-    analyzed_dates = [];
     window.getData = function (start, end) {
         $.ajax({
             type: 'POST',
@@ -138,17 +147,12 @@
                 'name': name,
                 'start': start,
                 'end': end,
-                'language': language
+                'language': language,
+                'count':count
             },
             success: function (response) {
-                analyzed_dates.push(response)
-                if (dates.length == analyzed_dates.length) {
-                    alert("Date: " + response + " is finished.Please wait..")
-                    alert("Tweet collection is finished")
-                } else {
-                    alert("Date: " + response + " is finished.Please wait..")
-                    
-                }
+                alert(response)
+                $('.quoteList').append('<li>' + response +' </li>');
             }
         })
     }

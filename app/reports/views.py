@@ -50,6 +50,7 @@ def collect_tweets(request):
     language = request.POST.get('language')
     start_date = request.POST.get('start')
     end_date = request.POST.get('end')
+    count = request.POST.get('count')
     myReport = ''
     reports = myModels.Report.objects.filter(name=name, user=user)
     if reports is not None and len(reports) > 0:
@@ -60,9 +61,8 @@ def collect_tweets(request):
         return JsonResponse(temp_result, safe=False)
 
     print("starting..")
-    utils.get_tweets_via_tweepy(myReport, keyword, language, start_date, end_date)
+    utils.get_tweets_via_tweepy(myReport, keyword, language, start_date, end_date, count)
     print("finishing..")
-    tweets = myModels.Tweet.objects.filter(report=myReport)
     return JsonResponse(start_date, safe=False)
 
 
