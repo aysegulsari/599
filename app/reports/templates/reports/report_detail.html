@@ -87,6 +87,12 @@
             </thead>
         </table>
     </div>
+    <div class="input-group mb-3" >
+
+    <div id="piechart"></div>
+    <div id="piechart2"></div>
+</div>
+
 </div>
 
 
@@ -95,7 +101,8 @@
         document.getElementById("datatable").style.visibility = 'hidden'
         document.getElementById("datatable-div").style.visibility = 'hidden'
         document.getElementById("name").style.visibility = 'hidden'
-        //document.getElementById("button2").style.visibility = 'hidden'
+        document.getElementById("piechart").style.visibility = 'hidden'
+        document.getElementById("piechart2").style.visibility = 'hidden'
     }
 
     let tweets = {};
@@ -176,16 +183,78 @@
 
     $("#analyze_button").click(function () {
 
-        tweets = $.ajax({
+        $.ajax({
             type: 'POST',
-            async: false,
+            async: true,
             url: '{% url "reports:analyze_tweets" %}',
             dataType: 'json',
             data: {
                 'name': name,
             }
-        }).responseJSON;
+        });
     });
 
+    $("#draw_button").click(function () {
+
+        let graph_object = $.ajax({
+            type: 'POST',
+            async: false,
+            url: '{% url "reports:draw_charts" %}',
+            dataType: 'json',
+            data: {
+                'name': name,
+            }
+        }).responseJSON;
+
+        drawChart("Sentiment analysis of all tweets", graph_object['data'][0][1], graph_object['data'][1][1], graph_object['data'][2][1])
+        document.getElementById("piechart").style.visibility = 'visible'
+        document.getElementById("piechart2").style.visibility = 'visible'
+        //scroll to specific div when go to button is clicked
+        let target = document.getElementById("piechart")
+        var scrollContainer = target;
+        do { //find scroll container
+            scrollContainer = scrollContainer.parentNode;
+            if (!scrollContainer) return;
+            scrollContainer.scrollTop += 1;
+        } while (scrollContainer.scrollTop == 0);
+
+        var targetY = 0;
+        do { //find the top of target relatively to the container
+            if (target == scrollContainer) break;
+            targetY += target.offsetTop;
+        } while (target = target.offsetParent);
+
+        scroll = function (c, a, b, i) {
+            i++;
+            if (i > 30) return;
+            c.scrollTop = a + (b - a) / 30 * i;
+            setTimeout(function () {
+                scroll(c, a, b, i);
+            }, 20);
+        }
+        // start scrolling
+        scroll(scrollContainer, scrollContainer.scrollTop, targetY, 0);
+    });
+    // Load google charts
+    google.charts.load('current', {'packages': ['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    // Draw the chart and set the chart values
+    function drawChart(title, positive, negative, neutral) {
+        var data = google.visualization.arrayToDataTable([
+            ['sentiment','count'],
+            ['positive', positive],
+            ['negative', negative],
+            ['neutral', neutral]
+        ]);
+        // Optional; add a title and set the width and height of the chart
+        var options = {'title': title, 'width': 550, 'height': 400};
+
+        // Display the chart inside the <div> element with id="piechart"
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        var chart2 = new google.visualization.PieChart(document.getElementById('piechart2'));
+        chart.draw(data, options);
+        chart2.draw(data, options);
+    }
 </script>
 {% endblock %}

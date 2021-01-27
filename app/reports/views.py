@@ -92,12 +92,35 @@ def analyze_tweets(request):
     name = request.POST.get('name')
     reports = myModels.Report.objects.filter(name=name, user=request.user)
     tweets = myModels.Tweet.objects.filter(report=reports[0])
-    myReport = reports[0]
-
     for tw in tweets:
         print(tw.tweet_id)
         sentiment = utils.get_sentiment(tw.tweet_text)
         tw.sentiment = sentiment
         tw.save(update_fields=['sentiment'])
 
-    return JsonResponse("ok", safe=False)
+    return JsonResponse('ok', safe=False)
+
+
+@csrf_exempt
+def draw_charts(request):
+    name = request.POST.get('name')
+    reports = myModels.Report.objects.filter(name=name, user=request.user)
+    tweets = myModels.Tweet.objects.filter(report=reports[0])
+    positive = 0
+    negative = 0
+    neutral = 0
+    for tw in tweets:
+        if tw.sentiment == 'positive':
+            positive += 1
+        elif tw.sentiment == 'negative':
+            negative += 1
+        else:
+            neutral += 1
+
+    sentiment_graph_object = [['positive', positive],
+                              ['negative', negative],
+                              ['neutral', neutral], ]
+
+    sentiment_graph_object = {'data': sentiment_graph_object}
+
+    return JsonResponse(sentiment_graph_object, safe=False)
