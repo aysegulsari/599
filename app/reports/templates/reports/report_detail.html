@@ -1,61 +1,57 @@
 {% extends "reports/report_base.html" %}
 
 {% block report_content %}
-<div class="container">
 
-    <div class="jumbotron">
-        <h2 id=>{{report.name}}</h2>
 
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default3">Keywords</span>
-            </div>
-            <input type="text" maxlength="50" class="form-control" aria-label="Default"
-                   aria-describedby="inputGroup-sizing-default" id="keyword" name="keyword" disabled
-                   value="{{report.keyword}}">
+<div class="jumbotron">
+    <h2 id=>{{report.name}}</h2>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default3">Keywords</span>
         </div>
+        <input type="text" maxlength="50" class="form-control" aria-label="Default"
+               aria-describedby="inputGroup-sizing-default" id="keyword" name="keyword" disabled
+               value="{{report.keyword}}">
+    </div>
 
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default4">Tweet Count</span>
-            </div>
-            <input type="text" maxlength="50" class="form-control" aria-label="Default"
-                   aria-describedby="inputGroup-sizing-default" id="count" name="count" disabled
-                   value="{{report.tweet_count}}">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default4">Tweet Count</span>
         </div>
+        <input type="text" maxlength="50" class="form-control" aria-label="Default"
+               aria-describedby="inputGroup-sizing-default" id="count" name="count" disabled
+               value="{{report.tweet_count}}">
+    </div>
 
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default">Language</span>
-            </div>
-            <input type="text" maxlength="50" class="form-control" aria-label="Default"
-                   aria-describedby="inputGroup-sizing-default" id="language" name="language" disabled
-                   value="{{report.language}}">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default">Language</span>
         </div>
+        <input type="text" maxlength="50" class="form-control" aria-label="Default"
+               aria-describedby="inputGroup-sizing-default" id="language" name="language" disabled
+               value="{{report.language}}">
+    </div>
 
 
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default5">Time interval</span>
-            </div>
-            <input type="text" maxlength="50" class="form-control" aria-label="Default"
-                   aria-describedby="inputGroup-sizing-default" value="{{report.time_interval}}" disabled>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default5">Time interval</span>
         </div>
+        <input type="text" maxlength="50" class="form-control" aria-label="Default"
+               aria-describedby="inputGroup-sizing-default" value="{{report.time_interval}}" disabled>
+    </div>
 
-        <div>
-            <button class="btn-warning" id='button' type="button"><span class="fa fa-plus"></span>Show Tweets
-            </button>
-            <!-- <button class="btn-warning" id='analyze_button' type="button"><span class="fa fa-plus"></span>Analyze
-                Sentiments
-            </button> -->
-            <button class="btn-warning" id='draw_button' type="button"><span class="fa fa-plus"></span>Charts
-            </button>
-        </div>
-        <br>
-        <p id="name">{{report.name}}</p>
+    <div>
+        <button class="btn-warning" id='button' type="button"><span class="fa fa-plus"></span>Show Tweets
+        </button>
     </div>
     <br>
-    <br>
+    <p id="name">{{report.name}}</p>
+</div>
+<br>
+<br>
+<div class="jumbotron" id="dataTableDiv">
     <div class="input-group mb-3">
         <table id="datatable" class="display" style="width:100%">
             <thead>
@@ -74,19 +70,23 @@
             </thead>
         </table>
     </div>
-
-    <div class="input-group mb-3">
-        <div id="pieChart"><a class="zc-ref" href="https://www.zingchart.com/">Charts by ZingChart</a></div>
-    </div>
-
-    <div class="input-group mb-3">
-        <div id="barChart"><a class="zc-ref" href="https://www.zingchart.com">Powered by ZingChart</a></div>
+    <div>
+        <button class="btn-warning" id='draw_button' type="button"><span class="fa fa-plus"></span>Charts
+        </button>
     </div>
 </div>
+
+<div class="input-group mb-3">
+    <div id="pieChart"><a class="zc-ref" href="https://www.zingchart.com/">Charts by ZingChart</a></div>
+</div>
+
+<div id="barChart"><a class="zc-ref" href="https://www.zingchart.com">Powered by ZingChart</a></div>
+
 
 <script>
     window.onload = function () {
         document.getElementById("datatable").style.visibility = 'hidden'
+        document.getElementById("dataTableDiv").style.visibility = 'hidden'
         document.getElementById("name").style.visibility = 'hidden'
         document.getElementById("pieChart").style.visibility = 'visible'
         document.getElementById("barChart").style.visibility = 'hidden'
@@ -109,6 +109,7 @@
             document.getElementById("count").innerText = tweets['data'].length
             initializeDataTable();
         }
+        document.getElementById("dataTableDiv").style.visibility = 'visible'
         document.getElementById("datatable").style.visibility = 'visible'
     });
 

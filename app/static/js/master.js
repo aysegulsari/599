@@ -4,6 +4,7 @@ function initializeDataTable() {
         destroy: true,
         searchPanes: {
             threshold: 1,
+            layout: 'columns-8',
             columns: [1, 3, 4, 5, 6, 7, 8, 9]
         },
         columnDefs: [
@@ -205,15 +206,16 @@ function myScroll() {
         if (target == scrollContainer) break;
         targetY += target.offsetTop;
     } while (target = target.offsetParent);
-
-    scroll = function (c, a, b, i) {
-        i++;
-        if (i > 30) return;
-        c.scrollTop = a + (b - a) / 30 * i;
-        setTimeout(function () {
-            scroll(c, a, b, i);
-        }, 20);
-    }
+    
     // start scrolling
     scroll(scrollContainer, scrollContainer.scrollTop, targetY, 0);
+}
+
+scroll = function (c, a, b, i) {
+    i++;
+    if (i > 30) return;
+    c.scrollTop = a + (b - a) / 30 * i;
+    setTimeout(function () {
+        scroll(c, a, b, i);
+    }, 20);
 }

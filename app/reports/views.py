@@ -111,21 +111,51 @@ def draw_charts(request):
     negative_tweet_count = len(myModels.Tweet.objects.filter(report=reports[0], sentiment="negative"))
     neutral_tweets_count = len(myModels.Tweet.objects.filter(report=reports[0], sentiment="neutral"))
 
-    for tw in tweets:
-        contextAnnotations = myModels.ContextAnnotation.objects.filter(tweet=tw)
-
     sentiment_pie_object = {'positive': positive_tweet_count,
                             'negative': negative_tweet_count,
                             'neutral': neutral_tweets_count}
+    entity_objects = []
+    for tw in tweets:
+        sentiment = tw.sentiment
+        contextAnnotations = myModels.ContextAnnotation.objects.filter(tweet=tw)
+        for context in contextAnnotations:
+            name = context.entity_name
 
-    entity_names = ["brand", "show", "person"]
-    positive_counts = [135, 42, 67]
-    negative_counts = [10, 15, 10]
-    neutral_counts = [25, 45, 25]
+            if any(x['name'] == name for x in entity_objects) is False:
+                entity_object = {'name': name,
+                                 'occurrence': 0,
+                                 'values': {'positive_counts': 0, 'negative_counts': 0, 'neutral_counts': 0}}
+                entity_objects.append(entity_object)
+
+            obj = [x for x in entity_objects if x['name'] == name]
+            obj[0]['occurrence'] = obj[0]['occurrence'] + 1
+            if sentiment == 'positive':
+                obj[0]['values']['positive_counts'] = obj[0]['values'][
+                                                          'positive_counts'] + 1
+            elif sentiment == 'negative':
+                obj[0]['values']['negative_counts'] = obj[0]['values'][
+                                                          'negative_counts'] + 1
+            else:
+                obj[0]['values']['neutral_counts'] = obj[0]['values']['neutral_counts'] + 1
+
+    entity_names = []
+    positive_counts = []
+    negative_counts = []
+    neutral_counts = []
+
+    entity_objects_sorted = sorted(entity_objects, key=lambda x: x['occurrence'], reverse=True)
+    count = 0
+    for o in entity_objects_sorted:
+        entity_names.append(o['name'])
+        positive_counts.append(o['values']['positive_counts'])
+        negative_counts.append(o['values']['negative_counts'])
+        neutral_counts.append(o['values']['neutral_counts'])
+        count = count + 1
+        if count == 10:
+            break
+
     sentiment_bar_object = {'entity_names': entity_names, 'positive_counts': positive_counts,
                             'negative_counts': negative_counts, 'neutral_counts': neutral_counts}
-
-    entity_object = {"name": "brand", "positive_counts": 135, "negative_counts": 10, "neutral_count": 25}
 
     sentiment_graph_object = {'pie_data': sentiment_pie_object, 'bar_data': sentiment_bar_object}
 

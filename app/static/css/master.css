@@ -18,7 +18,7 @@ html, body {
 #barChart {
     height: 100%;
     width: 100%;
-    min-height: 350px;
+    max-height: 2500px;
 }
 
 #pieChart {
