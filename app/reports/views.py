@@ -117,10 +117,17 @@ def draw_charts(request):
         else:
             neutral += 1
 
-    sentiment_graph_object = [['positive', positive],
-                              ['negative', negative],
-                              ['neutral', neutral], ]
+    sentiment_pie_object = {'positive': positive,
+                            'negative': negative,
+                            'neutral': neutral}
 
-    sentiment_graph_object = {'data': sentiment_graph_object}
+    entity_names = ["brand", "show", "person"]
+    positive_counts = [135, 42, 67]
+    negative_counts = [10, 15, 10]
+    neutral_counts = [25, 45, 25]
+    sentiment_bar_object = {'entity_names': entity_names, 'positive_counts': positive_counts,
+                            'negative_counts': negative_counts, 'neutral_counts': neutral_counts}
+
+    sentiment_graph_object = {'pie_data': sentiment_pie_object, 'bar_data': sentiment_bar_object}
 
     return JsonResponse(sentiment_graph_object, safe=False)

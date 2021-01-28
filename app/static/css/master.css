@@ -1,11 +1,36 @@
 h1 {
-   color: #007bff;
-   font-style: italic;
+    color: #007bff;
+    font-style: italic;
 }
+
 h2 {
-   color: #007bff;
-   font-style: italic;
+    color: #007bff;
+    font-style: italic;
 }
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#barChart {
+    height: 100%;
+    width: 100%;
+    min-height: 350px;
+}
+
+#pieChart {
+  width: 100%;
+  height: 100%;
+  min-height: 250px;
+}
+
+.zc-ref {
+    display: none;
+}
+
 /*
 table.dataTable {
     background-color: #007bff;
