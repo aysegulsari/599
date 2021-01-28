@@ -76,22 +76,35 @@
     </div>
 </div>
 
-<div class="input-group mb-3">
-    <div id="pieChart"><a class="zc-ref" href="https://www.zingchart.com/">Charts by ZingChart</a></div>
+<div class="chart-content">
+    <h4 id="title1">Sentiment Distribution - All Tweets</h4>
+    <div id="pieChart"></div>
 </div>
-
-<div id="entityBarChart"><a class="zc-ref" href="https://www.zingchart.com">Powered by ZingChart</a></div>
-<div id="domainBarChart"><a class="zc-ref" href="https://www.zingchart.com">Powered by ZingChart</a></div>
-
+<div class="chart-content">
+    <h4 id="title2">Sentiment Distribution - Per Entity</h4>
+    <div id="entityBarChart"></div>
+</div>
+<div class="chart-content">
+    <h4 id="title3">Sentiment Distribution - Per Domain</h4>
+    <div id="domainBarChart"></div>
+</div>
+<h4 id="title4">Entity Network Graph</h4>
+<div id="myNetwork"></div>
+<br><br>
 
 <script>
     window.onload = function () {
         document.getElementById("datatable").style.visibility = 'hidden'
         document.getElementById("dataTableDiv").style.visibility = 'hidden'
         document.getElementById("name").style.visibility = 'hidden'
-        document.getElementById("pieChart").style.visibility = 'visible'
+        document.getElementById("pieChart").style.visibility = 'hidden'
         document.getElementById("entityBarChart").style.visibility = 'hidden'
         document.getElementById("domainBarChart").style.visibility = 'hidden'
+        document.getElementById("myNetwork").style.visibility = 'hidden'
+        document.getElementById("title1").style.visibility = 'hidden'
+        document.getElementById("title2").style.visibility = 'hidden'
+        document.getElementById("title3").style.visibility = 'hidden'
+        document.getElementById("title4").style.visibility = 'hidden'
     }
 
     let tweets = {};
@@ -141,10 +154,15 @@
         document.getElementById("pieChart").style.visibility = 'visible'
         document.getElementById("entityBarChart").style.visibility = 'visible'
         document.getElementById("domainBarChart").style.visibility = 'visible'
-        drawTotalSentimentChart(graph_object['pie_data'])
-        drawEntitySentimentChart(graph_object['bar_data'])
-        drawDomainSentimentChart(graph_object['bar_data'])
-        myScroll();
+        document.getElementById("myNetwork").style.visibility = 'visible'
+        document.getElementById("title1").style.visibility = 'visible'
+        document.getElementById("title2").style.visibility = 'visible'
+        document.getElementById("title3").style.visibility = 'visible'
+        document.getElementById("title4").style.visibility = 'visible'
+        drawTotalSentimentChart(graph_object['pie_data']);
+        drawEntitySentimentChart(graph_object['bar_data']);
+        drawDomainSentimentChart(graph_object['bar_data']);
+        myDraw();
     });
 </script>
 {% endblock %}

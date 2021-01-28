@@ -80,14 +80,6 @@ function drawTotalSentimentChart(pie_object) {
                 delay: 3000
             }
         },
-        title: {
-            fontColor: "#8e99a9",
-            text: 'Sentiment Distribution - All Tweets',
-            align: "left",
-            offsetX: 10,
-            fontFamily: "Open Sans",
-            fontSize: 25
-        },
         plotarea: {
             margin: "20 0 0 0"
         },
@@ -124,15 +116,6 @@ function drawEntitySentimentChart(bar_object) {
     var myConfig = {
         type: "bar",
         stacked: true,
-        title: {
-            fontColor: "#8e99a9",
-            text: 'Sentiment Distribution - Per Entity',
-            align: "left",
-            offsetX: 10,
-            fontFamily: "Open Sans",
-            fontSize: 25,
-            "adjust-layout": true
-        },
         legend: {
             toggleAction: 'remove',
             "adjust-layout": true
@@ -196,15 +179,6 @@ function drawDomainSentimentChart(bar_object) {
     var myConfig = {
         type: "bar",
         stacked: true,
-        title: {
-            fontColor: "#8e99a9",
-            text: 'Sentiment Distribution - Per Domain',
-            align: "left",
-            offsetX: 10,
-            fontFamily: "Open Sans",
-            fontSize: 25,
-            "adjust-layout": true
-        },
         legend: {
             toggleAction: 'remove',
             "adjust-layout": true
@@ -263,32 +237,53 @@ function drawDomainSentimentChart(bar_object) {
 
 }
 
-function myScroll() {
-    let target = document.getElementById("pieChart")
+function myDraw() {
+    let nodes = [
+        {id: 1, value: 2, label: "Algie"},
+        {id: 2, value: 31, label: "Alston"},
+        {id: 3, value: 12, label: "Barney"},
+        {id: 4, value: 16, label: "Coley"},
+        {id: 5, value: 17, label: "Grant"},
+        {id: 6, value: 15, label: "Langdon"},
+        {id: 7, value: 6, label: "Lee"},
+        {id: 8, value: 5, label: "Merlin"},
+        {id: 9, value: 30, label: "Mick"},
+        {id: 10, value: 18, label: "Tod"},
+    ];
 
-    //scroll to specific div when go to button is clicked
-    var scrollContainer = target;
-    do { //find scroll container
-        scrollContainer = scrollContainer.parentNode;
-        if (!scrollContainer) return;
-        scrollContainer.scrollTop += 1;
-    } while (scrollContainer.scrollTop == 0);
+    // create connections between people
+    // value corresponds with the amount of contact between two people
+    let edges = [
+        {from: 2, to: 8, value: 3},
+        {from: 2, to: 9, value: 5},
+        {from: 2, to: 10, value: 1},
+        {from: 4, to: 6, value: 8},
+        {from: 5, to: 7, value: 2},
+        {from: 4, to: 5, value: 1},
+        {from: 9, to: 10, value: 2},
+        {from: 2, to: 3, value: 6},
+        {from: 3, to: 9, value: 4},
+        {from: 5, to: 3, value: 1},
+        {from: 2, to: 7, value: 4},
+    ];
 
-    var targetY = 0;
-    do { //find the top of target relatively to the container
-        if (target == scrollContainer) break;
-        targetY += target.offsetTop;
-    } while (target = target.offsetParent);
-    
-    // start scrolling
-    scroll(scrollContainer, scrollContainer.scrollTop, targetY, 0);
-}
-
-scroll = function (c, a, b, i) {
-    i++;
-    if (i > 30) return;
-    c.scrollTop = a + (b - a) / 30 * i;
-    setTimeout(function () {
-        scroll(c, a, b, i);
-    }, 20);
+    // Instantiate our network object.
+    var container = document.getElementById("myNetwork");
+    var data = {
+        nodes: nodes,
+        edges: edges,
+    };
+    var options = {
+        nodes: {
+            shape: "dot",
+            scaling: {
+                customScalingFunction: function (min, max, total, value) {
+                    return value / total;
+                },
+                min: 5,
+                max: 150,
+            },
+        },
+    };
+    let network = new vis.Network(container, data, options);
 }
