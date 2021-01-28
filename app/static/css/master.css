@@ -15,7 +15,13 @@ html, body {
     padding: 0;
 }
 
-#barChart {
+#entityBarChart {
+    height: 100%;
+    width: 100%;
+    max-height: 2500px;
+}
+
+#domainBarChart {
     height: 100%;
     width: 100%;
     max-height: 2500px;

@@ -114,48 +114,81 @@ def draw_charts(request):
     sentiment_pie_object = {'positive': positive_tweet_count,
                             'negative': negative_tweet_count,
                             'neutral': neutral_tweets_count}
+    domain_objects = []
     entity_objects = []
     for tw in tweets:
         sentiment = tw.sentiment
         contextAnnotations = myModels.ContextAnnotation.objects.filter(tweet=tw)
         for context in contextAnnotations:
-            name = context.entity_name
+            domain_name = context.domain_name
+            entity_name = context.entity_name
 
-            if any(x['name'] == name for x in entity_objects) is False:
-                entity_object = {'name': name,
+            if any(x['name'] == domain_name for x in domain_objects) is False:
+                domain_object = {'name': domain_name,
+                                 'occurrence': 0,
+                                 'values': {'positive_counts': 0, 'negative_counts': 0, 'neutral_counts': 0}}
+                domain_objects.append(domain_object)
+
+            if any(x['name'] == entity_name for x in entity_objects) is False:
+                entity_object = {'name': entity_name,
                                  'occurrence': 0,
                                  'values': {'positive_counts': 0, 'negative_counts': 0, 'neutral_counts': 0}}
                 entity_objects.append(entity_object)
 
-            obj = [x for x in entity_objects if x['name'] == name]
-            obj[0]['occurrence'] = obj[0]['occurrence'] + 1
+            domain_obj = [x for x in domain_objects if x['name'] == domain_name]
+            domain_obj[0]['occurrence'] = domain_obj[0]['occurrence'] + 1
+
+            entity_obj = [x for x in entity_objects if x['name'] == entity_name]
+            entity_obj[0]['occurrence'] = entity_obj[0]['occurrence'] + 1
+
             if sentiment == 'positive':
-                obj[0]['values']['positive_counts'] = obj[0]['values'][
-                                                          'positive_counts'] + 1
+                domain_obj[0]['values']['positive_counts'] = domain_obj[0]['values']['positive_counts'] + 1
+                entity_obj[0]['values']['positive_counts'] = entity_obj[0]['values']['positive_counts'] + 1
             elif sentiment == 'negative':
-                obj[0]['values']['negative_counts'] = obj[0]['values'][
-                                                          'negative_counts'] + 1
+                domain_obj[0]['values']['negative_counts'] = domain_obj[0]['values']['negative_counts'] + 1
+                entity_obj[0]['values']['negative_counts'] = entity_obj[0]['values']['negative_counts'] + 1
             else:
-                obj[0]['values']['neutral_counts'] = obj[0]['values']['neutral_counts'] + 1
+                domain_obj[0]['values']['neutral_counts'] = domain_obj[0]['values']['neutral_counts'] + 1
+                entity_obj[0]['values']['neutral_counts'] = entity_obj[0]['values']['neutral_counts'] + 1
+
+    domain_names = []
+    domain_positive_counts = []
+    domain_negative_counts = []
+    domain_neutral_counts = []
+
+    domain_objects_sorted = sorted(domain_objects, key=lambda x: x['occurrence'], reverse=True)
+    count = 0
+    for o in domain_objects_sorted:
+        domain_names.append(o['name'])
+        domain_positive_counts.append(o['values']['positive_counts'])
+        domain_negative_counts.append(o['values']['negative_counts'])
+        domain_neutral_counts.append(o['values']['neutral_counts'])
+        count = count + 1
+        if count == 10:
+            break
 
     entity_names = []
-    positive_counts = []
-    negative_counts = []
-    neutral_counts = []
+    entity_positive_counts = []
+    entity_negative_counts = []
+    entity_neutral_counts = []
 
     entity_objects_sorted = sorted(entity_objects, key=lambda x: x['occurrence'], reverse=True)
     count = 0
     for o in entity_objects_sorted:
         entity_names.append(o['name'])
-        positive_counts.append(o['values']['positive_counts'])
-        negative_counts.append(o['values']['negative_counts'])
-        neutral_counts.append(o['values']['neutral_counts'])
+        entity_positive_counts.append(o['values']['positive_counts'])
+        entity_negative_counts.append(o['values']['negative_counts'])
+        entity_neutral_counts.append(o['values']['neutral_counts'])
         count = count + 1
         if count == 10:
             break
 
-    sentiment_bar_object = {'entity_names': entity_names, 'positive_counts': positive_counts,
-                            'negative_counts': negative_counts, 'neutral_counts': neutral_counts}
+    sentiment_bar_object = {'domain_names': domain_names, 'domain_positive_counts': domain_positive_counts,
+                            'domain_negative_counts': domain_negative_counts,
+                            'domain_neutral_counts': domain_neutral_counts,
+                            'entity_names': entity_names, 'entity_positive_counts': entity_positive_counts,
+                            'entity_negative_counts': entity_negative_counts,
+                            'entity_neutral_counts': entity_neutral_counts}
 
     sentiment_graph_object = {'pie_data': sentiment_pie_object, 'bar_data': sentiment_bar_object}
 

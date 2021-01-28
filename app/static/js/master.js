@@ -158,31 +158,104 @@ function drawEntitySentimentChart(bar_object) {
                 speed: 900,
                 sequence: 1,
                 delay: 3000
-            }
+            },
+            "bar-width": 30,
         },
         series: [
             {
                 text: 'positive',
-                values: bar_object['positive_counts'],//[135, 42, 67],
+                values: bar_object['entity_positive_counts'],//[135, 42, 67],
                 stack: 1,
                 backgroundColor: '#6FB07F'
             },
             {
                 text: 'negative',
-                values: bar_object['negative_counts'],//[10, 15, 10],
+                values: bar_object['entity_negative_counts'],//[10, 15, 10],
                 stack: 1,
                 backgroundColor: '#FF7965'
             },
             {
                 text: 'neutral',
-                values: bar_object['neutral_counts'],//[25, 45, 25],
+                values: bar_object['entity_neutral_counts'],//[25, 45, 25],
                 stack: 1,
                 backgroundColor: '#FFCB45'
             }
         ]
     };
     zingchart.render({
-        id: 'barChart',
+        id: 'entityBarChart',
+        data: myConfig,
+        height: '100%',
+        width: '100%'
+    });
+
+}
+
+function drawDomainSentimentChart(bar_object) {
+
+    var myConfig = {
+        type: "bar",
+        stacked: true,
+        title: {
+            fontColor: "#8e99a9",
+            text: 'Sentiment Distribution - Per Domain',
+            align: "left",
+            offsetX: 10,
+            fontFamily: "Open Sans",
+            fontSize: 25,
+            "adjust-layout": true
+        },
+        legend: {
+            toggleAction: 'remove',
+            "adjust-layout": true
+        },
+        scaleX: {
+            labels: bar_object['domain_names'] //['brand', 'tv shows', 'person']
+        },
+        plot: {
+            valueBox: {
+                text: "Total Tweet: %stack-total",
+                backgroundColor: 'black',
+                rules: [
+                    {
+                        rule: '%stack-top == 0',
+                        visible: 0
+                    }
+                ]
+            },
+            "adjust-layout": true,
+            animation: {
+                effect: 2,
+                method: 5,
+                speed: 900,
+                sequence: 1,
+                delay: 3000
+            },
+            "bar-width": 30,
+        },
+        series: [
+            {
+                text: 'positive',
+                values: bar_object['domain_positive_counts'],//[135, 42, 67],
+                stack: 1,
+                backgroundColor: '#6FB07F'
+            },
+            {
+                text: 'negative',
+                values: bar_object['domain_negative_counts'],//[10, 15, 10],
+                stack: 1,
+                backgroundColor: '#FF7965'
+            },
+            {
+                text: 'neutral',
+                values: bar_object['domain_neutral_counts'],//[25, 45, 25],
+                stack: 1,
+                backgroundColor: '#FFCB45'
+            }
+        ]
+    };
+    zingchart.render({
+        id: 'domainBarChart',
         data: myConfig,
         height: '100%',
         width: '100%'

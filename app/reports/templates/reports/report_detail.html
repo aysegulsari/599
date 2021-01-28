@@ -80,7 +80,8 @@
     <div id="pieChart"><a class="zc-ref" href="https://www.zingchart.com/">Charts by ZingChart</a></div>
 </div>
 
-<div id="barChart"><a class="zc-ref" href="https://www.zingchart.com">Powered by ZingChart</a></div>
+<div id="entityBarChart"><a class="zc-ref" href="https://www.zingchart.com">Powered by ZingChart</a></div>
+<div id="domainBarChart"><a class="zc-ref" href="https://www.zingchart.com">Powered by ZingChart</a></div>
 
 
 <script>
@@ -89,7 +90,8 @@
         document.getElementById("dataTableDiv").style.visibility = 'hidden'
         document.getElementById("name").style.visibility = 'hidden'
         document.getElementById("pieChart").style.visibility = 'visible'
-        document.getElementById("barChart").style.visibility = 'hidden'
+        document.getElementById("entityBarChart").style.visibility = 'hidden'
+        document.getElementById("domainBarChart").style.visibility = 'hidden'
     }
 
     let tweets = {};
@@ -137,9 +139,11 @@
         }).responseJSON;
 
         document.getElementById("pieChart").style.visibility = 'visible'
-        document.getElementById("barChart").style.visibility = 'visible'
+        document.getElementById("entityBarChart").style.visibility = 'visible'
+        document.getElementById("domainBarChart").style.visibility = 'visible'
         drawTotalSentimentChart(graph_object['pie_data'])
         drawEntitySentimentChart(graph_object['bar_data'])
+        drawDomainSentimentChart(graph_object['bar_data'])
         myScroll();
     });
 </script>
