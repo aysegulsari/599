@@ -106,20 +106,17 @@ def draw_charts(request):
     name = request.POST.get('name')
     reports = myModels.Report.objects.filter(name=name, user=request.user)
     tweets = myModels.Tweet.objects.filter(report=reports[0])
-    positive = 0
-    negative = 0
-    neutral = 0
-    for tw in tweets:
-        if tw.sentiment == 'positive':
-            positive += 1
-        elif tw.sentiment == 'negative':
-            negative += 1
-        else:
-            neutral += 1
 
-    sentiment_pie_object = {'positive': positive,
-                            'negative': negative,
-                            'neutral': neutral}
+    positive_tweet_count = len(myModels.Tweet.objects.filter(report=reports[0], sentiment="positive"))
+    negative_tweet_count = len(myModels.Tweet.objects.filter(report=reports[0], sentiment="negative"))
+    neutral_tweets_count = len(myModels.Tweet.objects.filter(report=reports[0], sentiment="neutral"))
+
+    for tw in tweets:
+        contextAnnotations = myModels.ContextAnnotation.objects.filter(tweet=tw)
+
+    sentiment_pie_object = {'positive': positive_tweet_count,
+                            'negative': negative_tweet_count,
+                            'neutral': neutral_tweets_count}
 
     entity_names = ["brand", "show", "person"]
     positive_counts = [135, 42, 67]
@@ -127,6 +124,8 @@ def draw_charts(request):
     neutral_counts = [25, 45, 25]
     sentiment_bar_object = {'entity_names': entity_names, 'positive_counts': positive_counts,
                             'negative_counts': negative_counts, 'neutral_counts': neutral_counts}
+
+    entity_object = {"name": "brand", "positive_counts": 135, "negative_counts": 10, "neutral_count": 25}
 
     sentiment_graph_object = {'pie_data': sentiment_pie_object, 'bar_data': sentiment_bar_object}
 

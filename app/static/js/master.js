@@ -163,17 +163,20 @@ function drawEntitySentimentChart(bar_object) {
             {
                 text: 'positive',
                 values: bar_object['positive_counts'],//[135, 42, 67],
-                stack: 1
+                stack: 1,
+                backgroundColor: '#6FB07F'
             },
             {
                 text: 'negative',
                 values: bar_object['negative_counts'],//[10, 15, 10],
-                stack: 1
+                stack: 1,
+                backgroundColor: '#FF7965'
             },
             {
                 text: 'neutral',
                 values: bar_object['neutral_counts'],//[25, 45, 25],
-                stack: 1
+                stack: 1,
+                backgroundColor: '#FFCB45'
             }
         ]
     };

@@ -62,10 +62,11 @@ def get_tweets_via_tweepy(report, keyword, language, start_date, end_date, count
             print("tweet already exists")
             continue
         if t.lang == language:
+            sentiment=get_sentiment(t.full_text)
             tweet = myModels.Tweet.objects.create(report=report, tweet_id=t.id, creation_date=t.created_at,
                                                   tweet_text=t.full_text, lang=t.lang,
                                                   retweet_count=t.retweet_count,
-                                                  like_count=t.favorite_count)
+                                                  like_count=t.favorite_count,sentiment=sentiment)
             hashtag_string = ''
             if str(t.id) in entity_dict:
                 entity = entity_dict[str(t.id)]
