@@ -188,10 +188,10 @@ def get_context_response(ids):
 
 def get_context(response, id_context_dict, id_entity_dict):
     json_response = response.json()
-    for tw in json_response['data']:
-
-        if 'context_annotations' in tw:
-            id_context_dict[tw['id']] = tw['context_annotations']
-        if 'entities' in tw:
-            id_entity_dict[tw['id']] = tw['entities']
+    if 'data' in json_response:
+        for tw in json_response['data']:
+            if 'context_annotations' in tw:
+                id_context_dict[tw['id']] = tw['context_annotations']
+            if 'entities' in tw:
+                id_entity_dict[tw['id']] = tw['entities']
     return id_context_dict, id_entity_dict
