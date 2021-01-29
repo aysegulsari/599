@@ -212,7 +212,7 @@ function drawDomainSentimentChart(bar_object) {
                 text: 'positive',
                 values: bar_object['domain_positive_counts'],//[135, 42, 67],
                 stack: 1,
-                backgroundColor: '#6FB07F'
+                backgroundColor: '#6fb07f'
             },
             {
                 text: 'negative',
@@ -237,7 +237,7 @@ function drawDomainSentimentChart(bar_object) {
 
 }
 
-function myDraw() {
+function myDraw(bar_object) {
     let nodes = [
         {id: 1, value: 2, label: "Algie"},
         {id: 2, value: 31, label: "Alston"},
@@ -286,4 +286,23 @@ function myDraw() {
         },
     };
     let network = new vis.Network(container, data, options);
+}
+
+function drawWordCloud(text,stopwords) {
+    var myConfig = {
+        type: 'wordcloud',
+        ignore:stopwords,
+        options: {
+            text: text,
+        }
+    };
+
+    zingchart.render({
+        id: 'wordCloudChart',
+        data: myConfig,
+        height: '100%',
+        width: '100%'
+    });
+
+
 }

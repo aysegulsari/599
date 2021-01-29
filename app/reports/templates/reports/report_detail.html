@@ -90,6 +90,11 @@
 </div>
 <h4 id="title4">Entity Network Graph</h4>
 <div id="myNetwork"></div>
+
+<div class="chart-content">
+    <h4 id="title5">WordCloud</h4>
+    <div id="wordCloudChart"></div>
+</div>
 <br><br>
 
 <script>
@@ -101,10 +106,12 @@
         document.getElementById("entityBarChart").style.visibility = 'hidden'
         document.getElementById("domainBarChart").style.visibility = 'hidden'
         document.getElementById("myNetwork").style.visibility = 'hidden'
+        document.getElementById("wordCloudChart").style.visibility = 'hidden'
         document.getElementById("title1").style.visibility = 'hidden'
         document.getElementById("title2").style.visibility = 'hidden'
         document.getElementById("title3").style.visibility = 'hidden'
         document.getElementById("title4").style.visibility = 'hidden'
+        document.getElementById("title5").style.visibility = 'hidden'
     }
 
     let tweets = {};
@@ -155,14 +162,18 @@
         document.getElementById("entityBarChart").style.visibility = 'visible'
         document.getElementById("domainBarChart").style.visibility = 'visible'
         document.getElementById("myNetwork").style.visibility = 'visible'
+        document.getElementById("wordCloudChart").style.visibility = 'visible'
         document.getElementById("title1").style.visibility = 'visible'
         document.getElementById("title2").style.visibility = 'visible'
         document.getElementById("title3").style.visibility = 'visible'
         document.getElementById("title4").style.visibility = 'visible'
+        document.getElementById("title5").style.visibility = 'visible'
+
         drawTotalSentimentChart(graph_object['pie_data']);
         drawEntitySentimentChart(graph_object['bar_data']);
         drawDomainSentimentChart(graph_object['bar_data']);
-        myDraw();
+        myDraw(graph_object['bar_data']);
+        drawWordCloud(graph_object['text'],graph_object['stop_words']);
     });
 </script>
 {% endblock %}

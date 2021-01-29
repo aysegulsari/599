@@ -13,3 +13,4 @@ python-dotenv
 pandas
 tweepy
 textBlob
+regex

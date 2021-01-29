@@ -5,8 +5,11 @@ from . import models as myModels
 from django.http import JsonResponse
 from . import utils
 import nltk
-
+from nltk.corpus import stopwords
+nltk.downloader.download('stopwords')
+stopwords = set(stopwords.words('english'))
 nltk.downloader.download('vader_lexicon')
+nltk.downloader.download('stopwords')
 
 
 class SingleReport(generic.DetailView):
@@ -116,7 +119,9 @@ def draw_charts(request):
                             'neutral': neutral_tweets_count}
     domain_objects = []
     entity_objects = []
+    all_tweets = ""
     for tw in tweets:
+        all_tweets = all_tweets + tw.tweet_text + " "
         sentiment = tw.sentiment
         contextAnnotations = myModels.ContextAnnotation.objects.filter(tweet=tw)
         for context in contextAnnotations:
@@ -151,6 +156,7 @@ def draw_charts(request):
                 domain_obj[0]['values']['neutral_counts'] = domain_obj[0]['values']['neutral_counts'] + 1
                 entity_obj[0]['values']['neutral_counts'] = entity_obj[0]['values']['neutral_counts'] + 1
 
+    cleaned_text = utils.clean_text(all_tweets)
     domain_names = []
     domain_positive_counts = []
     domain_negative_counts = []
@@ -182,7 +188,7 @@ def draw_charts(request):
         count = count + 1
         if count == 10:
             break
-
+    print('sssssssssssss',stopwords)
     sentiment_bar_object = {'domain_names': domain_names, 'domain_positive_counts': domain_positive_counts,
                             'domain_negative_counts': domain_negative_counts,
                             'domain_neutral_counts': domain_neutral_counts,
@@ -190,6 +196,7 @@ def draw_charts(request):
                             'entity_negative_counts': entity_negative_counts,
                             'entity_neutral_counts': entity_neutral_counts}
 
-    sentiment_graph_object = {'pie_data': sentiment_pie_object, 'bar_data': sentiment_bar_object}
+    sentiment_graph_object = {'pie_data': sentiment_pie_object, 'bar_data': sentiment_bar_object, 'text': cleaned_text,
+                              'search_term': reports[0].keyword, 'stop_words': stopwords}
 
     return JsonResponse(sentiment_graph_object, safe=False)

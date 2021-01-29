@@ -7,6 +7,7 @@ import pandas as pd
 from textblob import TextBlob
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import requests
+import re
 
 load_dotenv()
 
@@ -62,11 +63,11 @@ def get_tweets_via_tweepy(report, keyword, language, start_date, end_date, count
             print("tweet already exists")
             continue
         if t.lang == language:
-            sentiment=get_sentiment(t.full_text)
+            sentiment = get_sentiment(t.full_text)
             tweet = myModels.Tweet.objects.create(report=report, tweet_id=t.id, creation_date=t.created_at,
                                                   tweet_text=t.full_text, lang=t.lang,
                                                   retweet_count=t.retweet_count,
-                                                  like_count=t.favorite_count,sentiment=sentiment)
+                                                  like_count=t.favorite_count, sentiment=sentiment)
             hashtag_string = ''
             if str(t.id) in entity_dict:
                 entity = entity_dict[str(t.id)]
@@ -119,7 +120,8 @@ def get_tweets_via_tweepy(report, keyword, language, start_date, end_date, count
 
 def get_sentiment(text):
     analysis = TextBlob(text)
-    score = SentimentIntensityAnalyzer().polarity_scores(text)
+    cleaned_text = clean_text(text)
+    score = SentimentIntensityAnalyzer().polarity_scores(cleaned_text)
     neg = score['neg']
     pos = score['pos']
     sentiment = 'neutral'
@@ -130,6 +132,22 @@ def get_sentiment(text):
         sentiment = 'positive'
 
     return sentiment
+
+
+def clean_text(tweet):
+    tweet = tweet.lower()
+    tweet = re.sub(r'@[a-z0-9_]\S+', '', tweet)  # get rid of everything after @ symbol
+    tweet = re.sub(r'#[a-z0-9_]\S+', '', tweet)  # get rid of everything after # symbol
+    tweet = re.sub(r'&[a-z0-9_]\S+', '', tweet)  # get rid of everything after & symbol
+    tweet = re.sub(r'[?!.+,;$%&"]+', '', tweet)  # get rid of every symbol in the tweet
+    tweet = re.sub(r'rt[\s]+', '', tweet)  # get rid of retweet symbol rt
+    tweet = re.sub(r'\d+', '', tweet)
+    tweet = re.sub(r'[^\w]', ' ', tweet)
+    tweet = re.sub(r'\$', '', tweet)
+    tweet = re.sub(r'rt+', '', tweet)  # get rid of retweet symbol rt
+    tweet = re.sub(r'https?:?\/\/\S+', '', tweet)  # get rid of links
+
+    return tweet
 
 
 def get_id_context_dict(data):
