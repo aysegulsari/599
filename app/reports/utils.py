@@ -2,10 +2,7 @@ from dotenv import load_dotenv
 import os
 import tweepy
 from . import models as myModels
-from . import helper
-import pandas as pd
 from textblob import TextBlob
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import requests
 import re
 
@@ -119,17 +116,13 @@ def get_tweets_via_tweepy(report, keyword, language, start_date, end_date, count
 
 
 def get_sentiment(text):
-    analysis = TextBlob(text)
     cleaned_text = clean_text(text)
-    score = SentimentIntensityAnalyzer().polarity_scores(cleaned_text)
-    neg = score['neg']
-    pos = score['pos']
+    analysis = TextBlob(cleaned_text)
     sentiment = 'neutral'
-
-    if neg > pos:
-        sentiment = 'negative'
-    elif pos > neg:
+    if analysis.sentiment.polarity > 0:
         sentiment = 'positive'
+    elif analysis.sentiment.polarity < 0:
+        sentiment = 'negative'
 
     return sentiment
 
