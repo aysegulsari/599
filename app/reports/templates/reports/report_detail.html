@@ -80,17 +80,20 @@
     <h4 id="title1">Sentiment Distribution - All Tweets</h4>
     <div id="pieChart"></div>
 </div>
+<br><br>
 <div class="chart-content">
     <h4 id="title2">Sentiment Distribution - Per Entity</h4>
     <div id="entityBarChart"></div>
 </div>
+<br><br>
 <div class="chart-content">
     <h4 id="title3">Sentiment Distribution - Per Domain</h4>
     <div id="domainBarChart"></div>
 </div>
+<br><br>
 <h4 id="title4">Entity Network Graph</h4>
 <div id="myNetwork"></div>
-
+<br><br>
 <div class="chart-content">
     <h4 id="title5">WordCloud</h4>
     <div id="wordCloudChart"></div>
@@ -117,6 +120,7 @@
     let tweets = {};
     let isDatatableFilled = false
     let name = document.getElementById("name").innerHTML
+    let keyword=document.getElementById("keyword").value
     $("#button").click(function () {
         if (!isDatatableFilled) {
             tweets = $.ajax({
@@ -155,6 +159,7 @@
             dataType: 'json',
             data: {
                 'name': name,
+                'keyword':keyword
             }
         }).responseJSON;
 
@@ -173,7 +178,7 @@
         drawEntitySentimentChart(graph_object['bar_data']);
         drawDomainSentimentChart(graph_object['bar_data']);
         myDraw(graph_object['bar_data']);
-        drawWordCloud(graph_object['text'],graph_object['stop_words']);
+        drawWordCloud(graph_object['text'],graph_object['keywords']);
     });
 </script>
 {% endblock %}

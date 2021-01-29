@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
@@ -16,5 +17,5 @@ class HomePage(TemplateView):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return HttpResponseRedirect(reverse("test"))
+            return render(request, 'test.html', {'user_name': request.user.username})
         return super().get(request, *args, **kwargs)

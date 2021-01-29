@@ -5,11 +5,8 @@ from . import models as myModels
 from django.http import JsonResponse
 from . import utils
 import nltk
-from nltk.corpus import stopwords
-nltk.downloader.download('stopwords')
-stopwords = set(stopwords.words('english'))
+
 nltk.downloader.download('vader_lexicon')
-nltk.downloader.download('stopwords')
 
 
 class SingleReport(generic.DetailView):
@@ -107,6 +104,7 @@ def analyze_tweets(request):
 @csrf_exempt
 def draw_charts(request):
     name = request.POST.get('name')
+    keywords = request.POST.get('keyword')
     reports = myModels.Report.objects.filter(name=name, user=request.user)
     tweets = myModels.Tweet.objects.filter(report=reports[0])
 
@@ -188,7 +186,6 @@ def draw_charts(request):
         count = count + 1
         if count == 10:
             break
-    print('sssssssssssss',stopwords)
     sentiment_bar_object = {'domain_names': domain_names, 'domain_positive_counts': domain_positive_counts,
                             'domain_negative_counts': domain_negative_counts,
                             'domain_neutral_counts': domain_neutral_counts,
@@ -197,6 +194,6 @@ def draw_charts(request):
                             'entity_neutral_counts': entity_neutral_counts}
 
     sentiment_graph_object = {'pie_data': sentiment_pie_object, 'bar_data': sentiment_bar_object, 'text': cleaned_text,
-                              'search_term': reports[0].keyword, 'stop_words': stopwords}
+                              'search_term': reports[0].keyword, 'keywords': keywords}
 
     return JsonResponse(sentiment_graph_object, safe=False)
