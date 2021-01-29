@@ -288,12 +288,17 @@ function myDraw(bar_object) {
     let network = new vis.Network(container, data, options);
 }
 
-function drawWordCloud(text,stopwords) {
+function drawWordCloud(text, keywords) {
+    let stopWords = ['tco','https','yours', 'here', 'couldn', 'too', 'no', 'after', 'yourselves', 'for', 'they', 'ourselves', 'through', 'her', 'can', 't', 'd', "couldn't", 'it', 'didn', 'about', 'that', 'll', 'over', 'further', "mightn't", 'where', 've', 'you', "weren't", "haven't", 'their', 'some', 'own', 'isn', 'than', 'or', 'themselves', 'at', "doesn't", 'wouldn', 'be', 'down', "you're", 'theirs', 'how', 'only', 'shouldn', 'she', 'our', 'him', 'during', 'himself', 'when', 'out', 'all', 'he', 'were', 'yourself', 'such', 'mustn', 'haven', 'while', 'should', 'until', 'but', 's', 'having', "hasn't", 'me', 'on', 'before', 'so', 'them', 'its', 'has', 'and', 'again', 'which', 'in', 'with', 'won', 'same', "wasn't", 'wasn', 'once', 'any', 'was', 'mightn', "hadn't", 'most', 'because', 'there', 'shan', "won't", 'more', 'are', "shan't", 'ain', 'those', "she's", 'will', 'the', 'i', 'ma', 'did', "didn't", 'doesn', 'aren', 'we', "you've", 'why', 'had', 'very', 'now', 'weren', 'by', 'into', 'hadn', "needn't", 'as', 'whom', 'is', 'your', 'been', 'under', 'being', 'from', 'just', 'each', 'am', "you'd", 'who', 'm', 'against', 'don', 'if', 'other', 'up', 'a', 'do', 're', "mustn't", "it's", 'both', "should've", 'of', 'between', "you'll", 'nor', 'then', "don't", 'have', 'above', 'off', 'hasn', 'y', 'o', "aren't", 'below', 'needn', 'an', 'itself', 'my', 'his', "shouldn't", 'does', 'ours', 'not', 'these', 'myself', "that'll", 'to', 'hers', "isn't", 'doing', 'this', 'few', 'herself', "wouldn't", 'what'];
+    let listKeyword = keywords.split(",");
+    for (let s = 0; s < listKeyword.length; s++) {
+        stopWords.push(listKeyword[s]);
+    }
     var myConfig = {
         type: 'wordcloud',
-        ignore:stopwords,
         options: {
             text: text,
+            ignore: stopWords
         }
     };
 

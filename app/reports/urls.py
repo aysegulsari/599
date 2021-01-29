@@ -12,4 +12,5 @@ urlpatterns = [
     path('ajax/analyze', views.analyze_tweets, name='analyze_tweets'),
     path('ajax/draw', views.draw_charts, name='draw_charts'),
     path("details/in/<slug>/", views.SingleReport.as_view(), name="single"),
+    path('report/<int:pk>', views.ReportDetailView.as_view(), name='report_detail'),
 ]

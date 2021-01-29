@@ -18,7 +18,7 @@
     <div class="col-md-8">
         <div class="list-group">
             {% for report in object_list %}
-            <a href="{% url 'reports:single' slug=report.slug %}"
+            <a href="{% url 'reports:report_detail'  pk=report.pk %}"
                class="list-group-item list-group-item-action flex-column align-items-start">
                 <h3 class="mb-1">{{ report.name }}</h3>
                 <p class="mb-1">{{ report.description_html|safe }}</p>

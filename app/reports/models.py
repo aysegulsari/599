@@ -10,8 +10,8 @@ register = template.Library()
 
 class Report(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255, unique=True)
-    slug = models.SlugField(allow_unicode=True, unique=True)
+    name = models.CharField(max_length=255, unique=False)
+    slug = models.SlugField(allow_unicode=True, unique=False)
     time_interval = models.CharField(blank=False, max_length=50, default='')
     tweet_count = models.CharField(blank=False, max_length=10, default='')
     keyword = models.CharField(blank=False, max_length=50, default='')

@@ -20,6 +20,10 @@ class ListReports(generic.ListView):
         return myModels.Report.objects.filter(user=self.request.user)
 
 
+class ReportDetailView(generic.DetailView):
+    model = myModels.Report
+
+
 @csrf_exempt
 def create_report(request):
     user = request.user
