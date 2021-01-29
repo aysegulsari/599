@@ -99,7 +99,11 @@
     <div id="wordCloudChart"></div>
 </div>
 <br><br>
-
+<div class="chart-content">
+    <h4 id="title6">Retweet-Like Counts</h4>
+    <div id="likeChart"></div>
+</div>
+<br><br>
 <script>
     window.onload = function () {
         document.getElementById("datatable").style.visibility = 'hidden'
@@ -110,17 +114,19 @@
         document.getElementById("domainBarChart").style.visibility = 'hidden'
         document.getElementById("myNetwork").style.visibility = 'hidden'
         document.getElementById("wordCloudChart").style.visibility = 'hidden'
+        document.getElementById("likeChart").style.visibility = 'hidden'
         document.getElementById("title1").style.visibility = 'hidden'
         document.getElementById("title2").style.visibility = 'hidden'
         document.getElementById("title3").style.visibility = 'hidden'
         document.getElementById("title4").style.visibility = 'hidden'
         document.getElementById("title5").style.visibility = 'hidden'
+        document.getElementById("title6").style.visibility = 'hidden'
     }
 
     let tweets = {};
     let isDatatableFilled = false
     let name = document.getElementById("name").innerHTML
-    let keyword=document.getElementById("keyword").value
+    let keyword = document.getElementById("keyword").value
     $("#button").click(function () {
         if (!isDatatableFilled) {
             tweets = $.ajax({
@@ -159,7 +165,7 @@
             dataType: 'json',
             data: {
                 'name': name,
-                'keyword':keyword
+                'keyword': keyword
             }
         }).responseJSON;
 
@@ -168,17 +174,20 @@
         document.getElementById("domainBarChart").style.visibility = 'visible'
         document.getElementById("myNetwork").style.visibility = 'visible'
         document.getElementById("wordCloudChart").style.visibility = 'visible'
+        document.getElementById("likeChart").style.visibility = 'visible'
         document.getElementById("title1").style.visibility = 'visible'
         document.getElementById("title2").style.visibility = 'visible'
         document.getElementById("title3").style.visibility = 'visible'
         document.getElementById("title4").style.visibility = 'visible'
         document.getElementById("title5").style.visibility = 'visible'
+        document.getElementById("title6").style.visibility = 'visible'
 
         drawTotalSentimentChart(graph_object['pie_data']);
         drawEntitySentimentChart(graph_object['bar_data']);
         drawDomainSentimentChart(graph_object['bar_data']);
-        myDraw(graph_object['bar_data']);
-        drawWordCloud(graph_object['text'],graph_object['keywords']);
+        drawNetworkChart(graph_object['bar_data']);
+        drawWordCloud(graph_object['text'], graph_object['keywords']);
+        drawLikeChart(graph_object["like_data"]);
     });
 </script>
 {% endblock %}
