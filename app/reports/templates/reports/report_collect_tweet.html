@@ -7,25 +7,29 @@
             <h2>Create Report</h2>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-default2">Report name</span>
+                    <span class="input-group-text">Report name</span>
                 </div>
-                <input type="text" maxlength="50" class="form-control" aria-label="Default"
-                       aria-describedby="inputGroup-sizing-default" id="name" name="name" required>
+                <input type="text" maxlength="50" class="form-control" aria-label="Default" id="name" name="name"
+                       required>
             </div>
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-default3">Keywords</span>
+                    <span class="input-group-text">Keywords</span>
                 </div>
                 <div class="form-control tags" id="tags">
                     <input type="text" class="labelinput">
-                    <input type="hidden" name="result" id="keyword" name="keyword" required>
+                    <input type="hidden" name="result" id="keyword" name="keyword" aria-describedby="keywordHelpBlock"
+                           required>
+                    <small id="keywordHelpBlock" class="form-text text-muted">
+                        if you enter more than one search term, it means all terms should be exist in the tweet text
+                    </small>
                 </div>
             </div>
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-default4">Number of tweets per day</span>
+                    <span class="input-group-text">Number of tweets per day</span>
                 </div>
                 <select class="form-control" id="count">
                     <option value="100">100</option>
@@ -38,7 +42,7 @@
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-default">Language</span>
+                    <span class="input-group-text">Language</span>
                 </div>
                 <select class="form-control" id="language">
                     <option value="en">en</option>
@@ -49,9 +53,13 @@
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-default5">Time interval</span>
+                    <span class="input-group-text">Time interval</span>
                 </div>
-                <input type="text" name="daterange" value="01/12/2021 - 01/16/2021" required>
+                <input type="text" name="daterange" value="01/23/2021 - 01/30/2021" required
+                       aria-describedby="timeHelpBlock">
+                <small id="timeHelpBlock" class="form-text text-muted">
+                    it is only possible to retrieve tweets within the LAST 7 days
+                </small>
             </div>
 
             <div>
@@ -60,12 +68,11 @@
             </div>
             <br>
             <br>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <p id="note"> Tweet collection process is finished for the following days</p>
-                </div>
-            </div>
+
+            <p id="note">Tweet collection process will be finished, when all dates are listed below</p>
             <ul class="quoteList"></ul>
+            <a id="messageTag" href="{% url 'reports:all' %}">After tweet collection is finished,
+                you can display your report</a>
         </div>
     </div>
 </form>
@@ -73,10 +80,11 @@
 <script>
     window.onload = function (e) {
         document.getElementById("note").style.visibility = 'hidden'
+        document.getElementById("messageTag").style.visibility = 'hidden'
     }
 
-    let startDate = '2021-01-12';
-    let endDate = '2021-01-16';
+    let startDate = '2021-01-23';
+    let endDate = '2021-01-30';
     let keyword = '';
     let language = '';
     let name = '';
@@ -116,6 +124,7 @@
             alert('Please wait until tweets are collected!')
             document.body.style.cursor = "progress";
             document.getElementById("note").style.visibility = 'visible'
+            document.getElementById("messageTag").style.visibility = 'visible'
             $.ajax({
                 type: 'POST',
                 async: false,
@@ -149,10 +158,10 @@
                 'start': start,
                 'end': end,
                 'language': language,
-                'count':count
+                'count': count
             },
             success: function (response) {
-                $('.quoteList').append('<li>' + response +' </li>');
+                $('.quoteList').append('<li>' + response + ' </li>');
             }
         })
     }

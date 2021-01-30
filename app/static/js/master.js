@@ -312,13 +312,11 @@ function drawWordCloud(text, keywords) {
 
 }
 
-function drawLikeChart(like_object) {
+function drawLikeChart(like_data) {
     let chartConfig = {
         type: 'line',
         legend: {
-            adjustLayout: true,
-            align: 'center',
-            verticalAlign: 'bottom'
+            adjustLayout: true
         },
         plot: {
             valueBox: {
@@ -361,18 +359,20 @@ function drawLikeChart(like_object) {
         },
         series: [
             {
-                values: [[1646333207000, 15], [1646592407000, 20]],
+                values: like_data['retweet_data'],//[[1646333207000, 15], [1646592407000, 20]],
                 lineColor: '#9c27b0',
                 marker: {
                     backgroundColor: '#9c27b0'
-                }
+                },
+                text: 'retweet count'
             },
             {
-                values: [[1646333207000, 10], [1646592407000, 25]],
+                values: like_data['like_data'],//[[1646333207000, 10], [1646592407000, 25]],
                 lineColor: '#f57c00',
                 marker: {
                     backgroundColor: '#f57c00'
-                }
+                },
+                text: 'like count'
             }
         ]
     };

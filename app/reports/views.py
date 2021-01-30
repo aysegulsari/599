@@ -122,9 +122,14 @@ def draw_charts(request):
     domain_objects = []
     entity_objects = []
     all_tweets = ""
+
+    retweet_data = []
+    like_data = []
     for tw in tweets:
         all_tweets = all_tweets + tw.tweet_text + " "
         sentiment = tw.sentiment
+        retweet_data.append([tw.creation_date, tw.retweet_count])
+        like_data.append([tw.creation_date, tw.like_count])
         contextAnnotations = myModels.ContextAnnotation.objects.filter(tweet=tw)
         for context in contextAnnotations:
             domain_name = context.domain_name
@@ -197,7 +202,10 @@ def draw_charts(request):
                             'entity_negative_counts': entity_negative_counts,
                             'entity_neutral_counts': entity_neutral_counts}
 
+    like_object = {'retweet_data': retweet_data,  # [[1646333207000, 15], [1646592407000, 20]],
+                   'like_data': like_data}  # [[1646333207000, 10], [1646592407000, 25]]}
+
     sentiment_graph_object = {'pie_data': sentiment_pie_object, 'bar_data': sentiment_bar_object, 'text': cleaned_text,
-                              'search_term': reports[0].keyword, 'keywords': keywords}
+                              'search_term': reports[0].keyword, 'keywords': keywords, 'like_data': like_object}
 
     return JsonResponse(sentiment_graph_object, safe=False)

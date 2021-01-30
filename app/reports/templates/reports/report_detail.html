@@ -8,38 +8,37 @@
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-default3">Keywords</span>
+            <span class="input-group-text">Keywords</span>
         </div>
-        <input type="text" maxlength="50" class="form-control" aria-label="Default"
+        <input type="text" maxlength="50" class="form-control"
                aria-describedby="inputGroup-sizing-default" id="keyword" name="keyword" disabled
                value="{{report.keyword}}">
     </div>
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-default4">Tweet Count</span>
+            <span class="input-group-text">Tweet Count</span>
         </div>
-        <input type="text" maxlength="50" class="form-control" aria-label="Default"
-               aria-describedby="inputGroup-sizing-default" id="count" name="count" disabled
+        <input type="text" maxlength="50" class="form-control" id="count" name="count" disabled
                value="{{report.tweet_count}}">
     </div>
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-default">Language</span>
+            <span class="input-group-text">Language</span>
         </div>
-        <input type="text" maxlength="50" class="form-control" aria-label="Default"
-               aria-describedby="inputGroup-sizing-default" id="language" name="language" disabled
+        <input type="text" maxlength="50" class="form-control"
+               id="language" name="language" disabled
                value="{{report.language}}">
     </div>
 
 
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-default5">Time interval</span>
+            <span class="input-group-text">Time interval</span>
         </div>
-        <input type="text" maxlength="50" class="form-control" aria-label="Default"
-               aria-describedby="inputGroup-sizing-default" value="{{report.time_interval}}" disabled>
+        <input type="text" maxlength="50" class="form-control"
+               value="{{report.time_interval}}" disabled>
     </div>
 
     <div>
@@ -99,11 +98,12 @@
     <div id="wordCloudChart"></div>
 </div>
 <br><br>
+<!--
 <div class="chart-content">
     <h4 id="title6">Retweet-Like Counts</h4>
     <div id="likeChart"></div>
 </div>
-<br><br>
+<br><br>-->
 <script>
     window.onload = function () {
         document.getElementById("datatable").style.visibility = 'hidden'
@@ -114,13 +114,13 @@
         document.getElementById("domainBarChart").style.visibility = 'hidden'
         document.getElementById("myNetwork").style.visibility = 'hidden'
         document.getElementById("wordCloudChart").style.visibility = 'hidden'
-        document.getElementById("likeChart").style.visibility = 'hidden'
+        //document.getElementById("likeChart").style.visibility = 'hidden'
         document.getElementById("title1").style.visibility = 'hidden'
         document.getElementById("title2").style.visibility = 'hidden'
         document.getElementById("title3").style.visibility = 'hidden'
         document.getElementById("title4").style.visibility = 'hidden'
         document.getElementById("title5").style.visibility = 'hidden'
-        document.getElementById("title6").style.visibility = 'hidden'
+        //document.getElementById("title6").style.visibility = 'hidden'
     }
 
     let tweets = {};
@@ -174,20 +174,20 @@
         document.getElementById("domainBarChart").style.visibility = 'visible'
         document.getElementById("myNetwork").style.visibility = 'visible'
         document.getElementById("wordCloudChart").style.visibility = 'visible'
-        document.getElementById("likeChart").style.visibility = 'visible'
+        //document.getElementById("likeChart").style.visibility = 'visible'
         document.getElementById("title1").style.visibility = 'visible'
         document.getElementById("title2").style.visibility = 'visible'
         document.getElementById("title3").style.visibility = 'visible'
         document.getElementById("title4").style.visibility = 'visible'
         document.getElementById("title5").style.visibility = 'visible'
-        document.getElementById("title6").style.visibility = 'visible'
+        //document.getElementById("title6").style.visibility = 'visible'
 
         drawTotalSentimentChart(graph_object['pie_data']);
         drawEntitySentimentChart(graph_object['bar_data']);
         drawDomainSentimentChart(graph_object['bar_data']);
         drawNetworkChart(graph_object['bar_data']);
         drawWordCloud(graph_object['text'], graph_object['keywords']);
-        drawLikeChart(graph_object["like_data"]);
+        //drawLikeChart(graph_object['like_data']);
     });
 </script>
 {% endblock %}
