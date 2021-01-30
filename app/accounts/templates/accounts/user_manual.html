@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="jumbotron">
+    <div class="container">
+        <h1>User Manual</h1>
+        <p>First you need to create a report to collect tweets related to a domain.</p>
+        <p>In the following screenshot, you see the report field that should be filled.</p>
+        <img src="{% static 'img/userManual1.PNG'%}" alt="user manual 1" style="border: 2px solid lightgray;">
+        <br> <br> <br>
+        <p>Report name should be unique. You can not create more than one report with the same name.</p>
+        <p>Tweet collection will be done based on your terms in the keywords field. But don' forget that if you enter
+            more than one keyword tweets that contain all keywords will be retrieved.</p>
+        <p>Number of tweets field is pretty obvious ;)</p>
+        <p>English, Turkish and all are the options for tweet languages. But sentiment analysis is working better on
+            English tweets.</p>
+        <p>Since free version of Twitter API is used, time interval is limited. It is only possible to retrieve tweets
+            within last 7 days.</p>
+        <p>After you filled the fields click on "Collect Tweets" button and wait for all the dates that you want to
+            analyze is listed below as in the following screenshot.</p>
+        <img src="{% static 'img/userManual2.PNG'%}" alt="user manual 2" style="border: 2px solid lightgray;">
+        <br> <br> <br>
+        <p>When you see all the dates that you want to analyze is listed go to the report page and start to analyze.</p>
+        <p>Let say, you created a report related to Netflix.</p>
+        <img src="{% static 'img/userManual3.PNG'%}" alt="user manual 3" style="border: 2px solid lightgray;">
+        <br> <br> <br>
+        <p>When you click on "Show Tweets" button, collected tweets will be displayed in a datatable with filtering
+            panes.</p>
+        <img src="{% static 'img/userManual4.PNG'%}" alt="user manual 4" style="border: 2px solid lightgray;" width="1000" height="500">
+        <br> <br> <br>
+        <p>When you click on "Charts" button, tweets will be analyzed and analysis results will be displayed.
+            Keep in mind that more tweets to analyze more time it will take.</p>
+        <p>Sentiment Distribution chart shows the overall sentiment analysis for all tweets. For technical details for
+            sentiment analysis please visit <a href="https://github.com/aysegulsari/599" >github</a> repository.</p>
+        <img src="{% static 'img/userManual5.png'%}" alt="user manual 5" style="border: 2px solid lightgray;">
+        <br> <br> <br>
+        <p>Following two charts also show the sentiment distribution but according to per domain and per entity.</p>
+        <img src="{% static 'img/userManual6.PNG'%}" alt="user manual 3" style="border: 2px solid lightgray;">
+        <br> <br> <br>
+        <p>In the Entity Network Graph, the relationship between entities are displayed.</p>
+        <img src="{% static 'img/userManual7.png'%}" alt="user manual 3" style="border: 2px solid lightgray;">
+        <br> <br> <br>
+        <p>Finally in the wordcloud, you will see the most commonly used words in the tweets. Bigger font means that word is used more frequently.</p>
+        <img src="{% static 'img/userManual8.png'%}" alt="user manual 3" style="border: 2px solid lightgray;">
+        <br> <br> <br>
+    </div>
+</div>
+{% endblock %}

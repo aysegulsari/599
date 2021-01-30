@@ -51,6 +51,7 @@
         </div>
         <div class="navbar-nav ml-auto">
             {% if user.is_authenticated %}
+            <a class="nav-item nav-link" href="{% url 'accounts:user_manual' %}" class="btn btn-simple">User Manual</a>
             <a class="nav-item nav-link" href="{% url 'reports:all' %}" class="btn btn-simple">Reports</a>
             <a class="nav-item nav-link" href="{% url 'accounts:logout' %}" class="btn btn-simple">Log out</a>
             {% else %}

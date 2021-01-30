@@ -1,26 +1,53 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
-<div class="container">
-    <div class="jumbotron">
-        <h1>Welcome, {{user_name}}</h1>
-        <p>TECHNICAL DETAILS ABOUT THE PROJECT!!!!!</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Id cursus metus aliquam eleifend mi in nulla posuere. Lorem sed risus ultricies
-            tristique nulla aliquet enim. Tincidunt lobortis feugiat vivamus at augue eget arcu dictum. Commodo quis
-            imperdiet massa tincidunt nunc pulvinar. Convallis a cras semper auctor neque vitae. Amet venenatis urna
-            cursus eget nunc. Vel facilisis volutpat est velit egestas dui id. Arcu dictum varius duis at consectetur
-            lorem donec massa. Id volutpat lacus laoreet non curabitur gravida arcu ac. Parturient montes nascetur
-            ridiculus mus mauris vitae ultricies leo. Non odio euismod lacinia at quis risus. Diam donec adipiscing
-            tristique risus. At tellus at urna condimentum mattis pellentesque id. Diam vel quam elementum pulvinar
-            etiam non quam lacus.
 
-            Eu facilisis sed odio morbi. Purus ut faucibus pulvinar elementum integer enim neque volutpat. Natoque
-            penatibus et magnis dis. At auctor urna nunc id cursus metus. Facilisis magna etiam tempor orci eu. Morbi
-            quis commodo odio aenean. Commodo ullamcorper a lacus vestibulum sed. Arcu risus quis varius quam quisque
-            id. Ornare massa eget egestas purus viverra accumsan in nisl. Et malesuada fames ac turpis egestas. Vel quam
-            elementum pulvinar etiam. Vitae elementum curabitur vitae nunc. Dictumst quisque sagittis purus sit amet
-            volutpat consequat mauris nunc. Ut venenatis tellus in metus vulputate eu. Consectetur a erat nam at.
-            Gravida in fermentum et sollicitudin ac orci phasellus egestas. In nibh mauris cursus mattis molestie a.</p>
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-3">Welcome, {{user_name}}</h1>
+        <p>The purpose of this project is enabling users to enter a query and
+            analyze the sentiment associated with that query. Sentiment analysis is a popular topic in natural language
+            processing and has a wide range of application areas. Social media is one of the reasons of the popularity
+            of sentiment analysis. Thanks to applications like Twitter, millions of users share their opinions about
+            different topics almost every second. There is a rich information pool to be analyzed.</p>
+        <p>For example, for a marketing expert who has released a new product to the market, the tweets about their
+            product can be considered much more important than the sales numbers. By analyzing the tweets, the
+            reason of unsatisfactory of the customers can be detected and immediate actions can be taken.
+            Sentiment analysis is also important for politicians. They can analyze the reaction of the voters
+            about their actions and update their campaigns accordingly.</p>
+        <!-- <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>-->
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Twitter API</h2>
+            <p> In this project Twitter is used as data source. Twitter API provides many opportunities to
+                the users like analyzing past conversations, measuring tweet performance, listening for important
+                events, exploring tweets for a specific account, etc.
+            <p><a class="btn btn-secondary" href="https://developer.twitter.com/en/docs/twitter-api" role="button">View
+                details &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Domain Specific Tweet Collection</h2>
+            <p> For the first prototype, a domain will be
+                specified and keywords related to this domain will be determined. Since Covid-19 is the most
+                popular topic nowadays if Covid-19 is selected as the domain the related keywords can be
+                "Coronavirus, Corona, Wuhan virus, China virus, Chinese virus, pandemic, lockdown,
+                quarantine, social distance, stay home etc.".More details can be found in the github repository.</p>
+            <p><a class="btn btn-secondary" href="https://github.com/aysegulsari/599" role="button">View details
+                &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Sentiment analysis</h2>
+            <p> For a time interval specified by the user, the tweets
+                related to these keywords will be downloaded and stored in a database. User will be able to
+                create reports depending on the sentiment analysis of stored tweets. For more details about sentiment
+                analysis check following academic paper.</p>
+            <p><a class="btn btn-secondary" href="https://www.aclweb.org/anthology/S17-2002.pdf" role="button">View
+                details &raquo;</a></p>
+        </div>
     </div>
 </div>
 {% endblock %}
