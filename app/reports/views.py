@@ -16,9 +16,6 @@ class SingleReport(generic.DetailView):
 class ListReports(generic.ListView):
     model = myModels.Report
 
-    def get_queryset(self):
-        return myModels.Report.objects.filter(user=self.request.user)
-
 
 class ReportDetailView(generic.DetailView):
     model = myModels.Report
@@ -32,7 +29,7 @@ def create_report(request):
     language = request.POST.get('language')
     time_interval = request.POST.get('start') + " / " + request.POST.get('end')
     myReport = ''
-    reports = myModels.Report.objects.filter(name=name, user=user)
+    reports = myModels.Report.objects.filter(name=name)
     if reports is not None and len(reports) > 0:
         myReport = reports[0]
 
@@ -56,7 +53,7 @@ def collect_tweets(request):
     end_date = request.POST.get('end')
     count = request.POST.get('count')
     myReport = ''
-    reports = myModels.Report.objects.filter(name=name, user=user)
+    reports = myModels.Report.objects.filter(name=name)
     if reports is not None and len(reports) > 0:
         myReport = reports[0]
 
@@ -77,7 +74,7 @@ def report_collect_tweet(request):
 @csrf_exempt
 def get_tweets(request):
     name = request.POST.get('name')
-    reports = myModels.Report.objects.filter(name=name, user=request.user)
+    reports = myModels.Report.objects.filter(name=name)
     tweets = myModels.Tweet.objects.filter(report=reports[0])
     myReport = reports[0]
     myReport.tweet_count = str(len(tweets))
@@ -94,7 +91,7 @@ def get_tweets(request):
 @csrf_exempt
 def analyze_tweets(request):
     name = request.POST.get('name')
-    reports = myModels.Report.objects.filter(name=name, user=request.user)
+    reports = myModels.Report.objects.filter(name=name)
     tweets = myModels.Tweet.objects.filter(report=reports[0])
     for tw in tweets:
         print(tw.tweet_id)
@@ -109,7 +106,7 @@ def analyze_tweets(request):
 def draw_charts(request):
     name = request.POST.get('name')
     keywords = request.POST.get('keyword')
-    reports = myModels.Report.objects.filter(name=name, user=request.user)
+    reports = myModels.Report.objects.filter(name=name)
     tweets = myModels.Tweet.objects.filter(report=reports[0])
 
     positive_tweet_count = len(myModels.Tweet.objects.filter(report=reports[0], sentiment="positive"))

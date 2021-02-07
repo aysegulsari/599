@@ -61,7 +61,7 @@ class Hashtag(models.Model):
 class ContextAnnotation(models.Model):
     tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE)
     domain_id = models.CharField(blank=False, max_length=100, default='')
-    domain_name = models.CharField(blank=False, max_length=100, default='')
-    domain_desc = models.CharField(blank=False, max_length=250, default='')
+    domain_name = models.TextField(blank=False, default='')
+    domain_desc = models.TextField(blank=False, default='')
     entity_id = models.CharField(blank=False, max_length=100, default='')
-    entity_name = models.CharField(blank=False, max_length=100, default='')
+    entity_name = models.TextField(blank=False, default='')
