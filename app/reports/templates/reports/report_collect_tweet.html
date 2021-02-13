@@ -34,7 +34,6 @@
                 <select class="form-control" id="count">
                     <option value="100">100</option>
                     <option value="500">500</option>
-                    <option value="1000">1000</option>
                 </select>
             </div>
 
@@ -53,7 +52,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">Time interval</span>
                 </div>
-                <input type="text" name="daterange" value="01/23/2021 - 01/30/2021" required
+                <input type="text" name="daterange" value="02/15/2021 - 02/22/2021" required
                        aria-describedby="timeHelpBlock">
                 <small id="timeHelpBlock" class="form-text text-muted">
                     it is only possible to retrieve tweets within the LAST 7 days
@@ -81,8 +80,8 @@
         document.getElementById("messageTag").style.visibility = 'hidden'
     }
 
-    let startDate = '2021-01-23';
-    let endDate = '2021-01-30';
+    let startDate = '2021-02-15';
+    let endDate = '2021-02-22';
     let keyword = '';
     let language = '';
     let name = '';

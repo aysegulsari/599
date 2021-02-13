@@ -90,9 +90,10 @@
     <div id="domainBarChart"></div>
 </div>
 <br><br>
+<!--
 <h4 id="title4">Entity Network Graph</h4>
 <div id="myNetwork"></div>
-<br><br>
+<br><br>-->
 <div class="chart-content">
     <h4 id="title5">WordCloud</h4>
     <div id="wordCloudChart"></div>
@@ -104,23 +105,33 @@
     <div id="likeChart"></div>
 </div>
 <br><br>-->
+<div>
+    <a id='title7' href="{% url 'reports:get_network_chart' pk=report.id %}"
+       style="color: #007bff; text-decoration: underline; font-size:22px;">
+        Draw Network Chart
+    </a>
+</div>
+<br><br>
+<br><br>
+<br><br>
+
 <script>
     window.onload = function () {
-        document.getElementById("datatable").style.visibility = 'hidden'
-        document.getElementById("dataTableDiv").style.visibility = 'hidden'
-        document.getElementById("name").style.visibility = 'hidden'
-        document.getElementById("pieChart").style.visibility = 'hidden'
-        document.getElementById("entityBarChart").style.visibility = 'hidden'
-        document.getElementById("domainBarChart").style.visibility = 'hidden'
-        document.getElementById("myNetwork").style.visibility = 'hidden'
-        document.getElementById("wordCloudChart").style.visibility = 'hidden'
-        //document.getElementById("likeChart").style.visibility = 'hidden'
-        document.getElementById("title1").style.visibility = 'hidden'
-        document.getElementById("title2").style.visibility = 'hidden'
-        document.getElementById("title3").style.visibility = 'hidden'
-        document.getElementById("title4").style.visibility = 'hidden'
-        document.getElementById("title5").style.visibility = 'hidden'
-        //document.getElementById("title6").style.visibility = 'hidden'
+        document.getElementById("datatable").style.display = 'none'
+        document.getElementById("dataTableDiv").style.display = 'none'
+        document.getElementById("name").style.display = 'none'
+        document.getElementById("pieChart").style.display = 'none'
+        document.getElementById("entityBarChart").style.display = 'none'
+        document.getElementById("domainBarChart").style.display = 'none'
+        //document.getElementById("myNetwork").style.display = 'none'
+        document.getElementById("wordCloudChart").style.display = 'none'
+        //document.getElementById("likeChart").style.display = 'none'
+        document.getElementById("title1").style.display = 'none'
+        document.getElementById("title2").style.display = 'none'
+        document.getElementById("title3").style.display = 'none'
+        //document.getElementById("title4").style.display = 'none'
+        document.getElementById("title5").style.display = 'none'
+        document.getElementById("title7").style.display = 'none'
     }
 
     let tweets = {};
@@ -141,8 +152,8 @@
             document.getElementById("count").innerText = tweets['data'].length
             initializeDataTable();
         }
-        document.getElementById("dataTableDiv").style.visibility = 'visible'
-        document.getElementById("datatable").style.visibility = 'visible'
+        document.getElementById("dataTableDiv").style.display = 'block'
+        document.getElementById("datatable").style.display = 'block'
     });
 
     $("#analyze_button").click(function () {
@@ -169,23 +180,23 @@
             }
         }).responseJSON;
 
-        document.getElementById("pieChart").style.visibility = 'visible'
-        document.getElementById("entityBarChart").style.visibility = 'visible'
-        document.getElementById("domainBarChart").style.visibility = 'visible'
-        document.getElementById("myNetwork").style.visibility = 'visible'
-        document.getElementById("wordCloudChart").style.visibility = 'visible'
-        //document.getElementById("likeChart").style.visibility = 'visible'
-        document.getElementById("title1").style.visibility = 'visible'
-        document.getElementById("title2").style.visibility = 'visible'
-        document.getElementById("title3").style.visibility = 'visible'
-        document.getElementById("title4").style.visibility = 'visible'
-        document.getElementById("title5").style.visibility = 'visible'
-        //document.getElementById("title6").style.visibility = 'visible'
+        document.getElementById("pieChart").style.display = 'block'
+        document.getElementById("entityBarChart").style.display = 'block'
+        document.getElementById("domainBarChart").style.display = 'block'
+        //document.getElementById("myNetwork").style.display = 'block'
+        document.getElementById("wordCloudChart").style.display = 'block'
+        //document.getElementById("likeChart").style.display = 'block'
+        document.getElementById("title1").style.display = 'block'
+        document.getElementById("title2").style.display = 'block'
+        document.getElementById("title3").style.display = 'block'
+        //document.getElementById("title4").style.display = 'block'
+        document.getElementById("title5").style.display = 'block'
+        document.getElementById("title7").style.display = 'block'
 
         drawTotalSentimentChart(graph_object['pie_data']);
         drawEntitySentimentChart(graph_object['bar_data']);
         drawDomainSentimentChart(graph_object['bar_data']);
-        drawNetworkChart(graph_object['bar_data']);
+        //drawNetworkChart(graph_object['network'], graph_object['network_entity_count']);
         drawWordCloud(graph_object['text'], graph_object['keywords']);
         //drawLikeChart(graph_object['like_data']);
     });

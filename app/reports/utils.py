@@ -105,6 +105,7 @@ def get_tweets_via_tweepy(report, keyword, language, start_date, end_date, count
                                 context_domain_string = context_domain_string + " , " + c["domain"]["name"]
 
                         if c["entity"]["name"] not in context_entity:
+                            context_entity.append(c['entity']['name'])
                             if context_entity_string == '':
                                 context_entity_string = context_entity_string + c["entity"]["name"]
                             else:
