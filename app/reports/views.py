@@ -119,7 +119,7 @@ def draw_charts(request):
     name = request.POST.get('name')
     keywords = request.POST.get('keyword')
     reports = myModels.Report.objects.filter(name=name)
-    tweets = myModels.Tweet.objects.filter(report=reports[0])
+    tweets = myModels.Tweet.objects.filter(report=reports[0] )
 
     positive_tweet_count = len(myModels.Tweet.objects.filter(report=reports[0], sentiment="positive"))
     negative_tweet_count = len(myModels.Tweet.objects.filter(report=reports[0], sentiment="negative"))
@@ -360,7 +360,7 @@ def get_network_chart(request, *args, **kwargs):
     '''
     fig.show()
     py.plot(fig, filename='midsummer_network.html')
-    
+
     G = nx.Graph()
 
     # rectanle width 1.5
